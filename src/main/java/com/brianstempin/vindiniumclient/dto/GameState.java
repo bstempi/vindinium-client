@@ -6,9 +6,9 @@ import java.util.List;
 
 /**
  * This is a DTO to represent the game-state as its returned by the game server
- *
+ * <p/>
  * This class does nothing but to represent a literal JSON to Java representation of the response.
- *
+ * <p/>
  * For further processing, other classes are needed.
  */
 public class GameState {
@@ -163,7 +163,8 @@ public class GameState {
 
         }
 
-        public Hero(int id, String name, String userId, int elo, Position pos, int life, int gold, int mineCount, Position spawnPos, boolean crashed) {
+        public Hero(int id, String name, String userId, int elo, Position pos, int life, int gold, int mineCount,
+                    Position spawnPos, boolean crashed) {
             this.id = id;
             this.name = name;
             this.userId = userId;

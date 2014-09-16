@@ -1,9 +1,7 @@
 package com.brianstempin.vindiniumclient.dto;
 
-import com.google.api.client.repackaged.com.google.common.annotations.VisibleForTesting;
 import com.google.gson.Gson;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.unitils.reflectionassert.ReflectionAssert;
 
@@ -29,6 +27,7 @@ public class GameStateTest {
         GameState testObj;
 
         testObj = gson.fromJson(new FileReader(jsonFile), GameState.class);
-        ReflectionAssert.assertPropertiesNotNull("Something in the GameState was null.  This test is designed to set every field", testObj);
+        ReflectionAssert.assertPropertiesNotNull("Something in the GameState was null.  This test is designed to set " +
+                "every field", testObj);
     }
 }

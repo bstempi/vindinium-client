@@ -24,4 +24,14 @@ public class RandomBot implements Bot {
                 return BotMove.STAY;
         }
     }
+
+    @Override
+    public void setup() {
+        // No-op
+    }
+
+    @Override
+    public void shutdown() {
+        // No-op
+    }
 }

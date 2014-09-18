@@ -11,5 +11,22 @@ import com.brianstempin.vindiniumclient.dto.Move;
  * to take care of building a Move response.
  */
 public interface Bot {
+
+    /**
+     * Method that plays each move
+     *
+     * @param gameState the current game state
+     * @return the decided move
+     */
     public BotMove move(GameState gameState);
+
+    /**
+     * Called before the game is started
+     */
+    public void setup();
+
+    /**
+     * Called after the game
+     */
+    public void shutdown();
 }

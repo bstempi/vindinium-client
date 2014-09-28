@@ -1,4 +1,4 @@
-# vindinium-cleint
+# vindinium-client
 
 ![Build status](https://travis-ci.org/bstempi/vindinium-client.svg)
 
@@ -49,7 +49,7 @@ The key is specified by the Vindinium website when a user name is registered.
 Instead of specifying a game URL, a user can say `TRAINING` or `COMPETITION`, which will connect to Vindinium's training and competition arena, respectively.  The only time a user will not use one of these two arguments is when they are connecting to a different server, such as a local development server.
 
 ##### Fully Qualified Bot Class Name
-The Main class will reflectively instantiate a `Bot` to play the game.  In order to locate the bot, the fully quallifed name is needed, in the general form of `com.packagename.packagenamingpackage.SomeBot`.
+The Main class will reflectively instantiate a `Bot` to play the game.  In order to locate the bot, the fully qualified name is needed, in the general form of `com.packagename.packagenamingpackage.SomeBot`.
 
 ### Extending
 This client is broken into a few pieces:  Bots, DTO, and Main.
@@ -66,7 +66,7 @@ com.brianstempin.vindiniumclient.dto
 
 The DTO, or Data Transfer Objects, are just a Java modeling of the JSON responses from the server and the URL encoded messages to the server.  They have annotations to allow them to be automatically marshalled and unmarshalled by GSON and the Google HTTP client.  They're just glorified POJOs.
 
-Unless Vindinium changes their communication structure, this can probably be left alone.  If there's a desire to presnt the game as a different class hierarchy, it should go into a separate package.
+Unless Vindinium changes their communication structure, this can probably be left alone.  If there's a desire to present the game as a different class hierarchy, it should go into a separate package.
 
 #### Main
 com.brianstempin.vindiniumclient
@@ -79,7 +79,7 @@ There are a few things that I'd like to do in order to consider this client "com
 #### Logging and Profiling
 Since the bot only has a second to respond, response times are important.  It'd be nice to be able to see how long a bots responses are taking and where the hot-spots are.
 
-It would also be nice to have a feature to dump game outcomes and stas to files.
+It would also be nice to have a feature to dump game outcomes and stats to files.
 
 #### Multiple Game Play
 If someone wants their bot to go out and destroy everything, then they need something to run the bot in a loop.  It'd be nice if `Main` could accept a param to tell it how many games to play.
@@ -90,7 +90,7 @@ If someone *really* wants to give their bot some play time, then it might be nic
 Because the bot is started via reflection, there must be a default constructor.  In order to allow people to do some initial set-up before the game, the `Bot` class should have a `setup()` method that gets called before the first server call.
 
 #### Alternate Game State Representation
-The game state representation used by the game isn't very pretty and makes certain tasks, such as indexing the location of mines on the map, a bit of a pain.  It would be nice to provide an alternate game state that included the immutable parts separate from the mutable parts and that made use of `Map`s and `List`s to make traveral easier.
+The game state representation used by the game isn't very pretty and makes certain tasks, such as indexing the location of mines on the map, a bit of a pain.  It would be nice to provide an alternate game state that included the immutable parts separate from the mutable parts and that made use of `Map`s and `List`s to make traversal easier.
 
-#### Programatic Running of Games
+#### Programmatic Running of Games
 `Main` should expose some methods so that games can be started without a CLI.

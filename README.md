@@ -1,5 +1,7 @@
 # vindinium-cleint
 
+![Build status](https://travis-ci.org/bstempi/vindinium-client.svg)
+
 ## Overview
 
 This is a simple Java client for the [Vindinium](http://vindinium.org) game.  Vindinium is a simple game played by an AI via HTTP that I found via Reddit.

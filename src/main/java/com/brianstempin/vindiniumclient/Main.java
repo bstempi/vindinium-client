@@ -57,7 +57,7 @@ public class Main {
             bot = botClazz.newInstance();
 
             initialRequest = requestFactory.buildPostRequest(gameUrl, content);
-            initialRequest.setReadTimeout(30 * 1000);
+            initialRequest.setReadTimeout(0); // Wait forever
             initialResponse = initialRequest.execute();
             gameState = initialResponse.parseAs(GameState.class);
 

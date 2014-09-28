@@ -1,12 +1,12 @@
-package com.brianstempin.vindiniumclient.bot;
+package com.brianstempin.vindiniumclient.bot.simple;
 
+import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.dto.GameState;
-import com.brianstempin.vindiniumclient.dto.Move;
 
 /**
  * Example bot
  */
-public class RandomBot implements Bot {
+public class RandomBot implements SimpleBot {
     @Override
     public BotMove move(GameState gameState) {
         int randomNumber = (int)(Math.random() * 4);

@@ -1,5 +1,7 @@
-package com.brianstempin.vindiniumclient.bot;
+package com.brianstempin.vindiniumclient.bot.simple;
 
+import com.brianstempin.vindiniumclient.bot.BotMove;
+import com.brianstempin.vindiniumclient.bot.simple.MurderBot;
 import com.brianstempin.vindiniumclient.dto.GameState;
 import com.google.gson.Gson;
 import org.junit.Assert;

@@ -1,5 +1,6 @@
-package com.brianstempin.vindiniumclient.bot;
+package com.brianstempin.vindiniumclient.bot.simple;
 
+import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.dto.GameState;
 
 import java.util.*;
@@ -8,7 +9,7 @@ import java.util.logging.Logger;
 /**
  * Created by bstempi on 9/22/14.
  */
-public class MurderBot implements Bot {
+public class MurderBot implements SimpleBot {
 
     private Logger logger;
 

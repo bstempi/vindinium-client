@@ -1,6 +1,6 @@
 package com.brianstempin.vindiniumclient;
 
-import com.brianstempin.vindiniumclient.bot.Bot;
+import com.brianstempin.vindiniumclient.bot.simple.SimpleBot;
 import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.dto.ApiKey;
 import com.brianstempin.vindiniumclient.dto.GameState;
@@ -49,11 +49,11 @@ public class Main {
         final HttpResponse initialResponse;
 
         GameState gameState;
-        Bot bot;
+        SimpleBot bot;
 
         try {
             Class<?> clazz = Class.forName(botClass);
-            Class<? extends Bot> botClazz = clazz.asSubclass(Bot.class);
+            Class<? extends SimpleBot> botClazz = clazz.asSubclass(SimpleBot.class);
             bot = botClazz.newInstance();
 
             initialRequest = requestFactory.buildPostRequest(gameUrl, content);

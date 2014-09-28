@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a simpel Java client for the [Vindinium](http://vindinium.org) game.  Vindinium is a simple game played by an AI via HTTP that I found via Reddit.
+This is a simple Java client for the [Vindinium](http://vindinium.org) game.  Vindinium is a simple game played by an AI via HTTP that I found via Reddit.
 
 The project is created using the Google HTTP client and GSON.  I decided to write a client because other clients seem to have some strange/verbose ways of parsing server communication and of presenting the game.  This client is focused on staying out of the way and letting people develop AIs to play.  It is also meant to be very easy to extend.
 
@@ -18,9 +18,15 @@ This is a simple Maven project, so it can be set up directly from the CLI via Ma
 
 #### Maven
 
+To build:
+
     mvn compile
+
+To create an uber JAR:
+
+    mvn package
     
-At this time, there is no packaging, so it can be run from the command line directly, via Maven, or via an IDE.  The easiest way is probably this:
+Command for running from Maven:
 
     mvn exec:java -Dexec.mainClass='com.brianstempin.vindiniumclient.Main' -Dexec.args='YOURKEY TRAINING com.brianstempin.vindiniumclient.bot.RandomBot'
 
@@ -51,7 +57,7 @@ com.brainstempin.vindiniumclient.bot
 
 There is a `Bot` interface that serves as the parent of all bots.  The gits is that a `GameState` is passed into the bot, it makes its decision, and then returns a `BotMove`.  The `Main` class will take that move, attach an API key to it, and send it off to the server.  Easy peasy.  The only thing to watch out for is that there must be a publically available default constructor.  This is needed to reflectively instantiate a bot during the game.
 
-For an example of a bot, take a look at `RandomBot`.
+For an example of a bot, take a look at `RandomBot` or `MurderBot`.
 
 #### DTO
 com.brianstempin.vindiniumclient.dto

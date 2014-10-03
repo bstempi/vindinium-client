@@ -1,5 +1,6 @@
-package com.brianstempin.vindiniumclient.bot;
+package com.brianstempin.vindiniumclient.bot.advanced;
 
+import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.bot.advanced.AdvancedBot;
 import com.brianstempin.vindiniumclient.bot.advanced.Mine;
 import com.brianstempin.vindiniumclient.bot.advanced.Pub;
@@ -35,15 +36,16 @@ public class AdvancedBotRunner implements Runnable {
     private final GenericUrl gameUrl;
     private final AdvancedBot bot;
 
+    // TODO Other than the strictly immutable stuff, should I be storing ANY of this state here?
     // Semi-mutable.  Once in the map, the objects stay there.  THe state of the map values may change.
-    // TODO mines and pubs don't change position, so they should be immutable.  Consider using Guava
     private Map<GameState.Position, Mine> mines;
+    // TODO Taverns should be immutable.
     private Map<GameState.Position, Pub> pubs;
     private Map<GameState.Position, GameState.Hero> herosByPosition;
+    private Map<Integer, GameState.Hero> heroById;
 
     // Effectively immutable.  They are mutable but not designed to be.
     // TODO The map itself should be immutable.  Consider using Guava
-    private Map<Integer, GameState.Hero> heroById;
     private Map<GameState.Position, Vertex> immutableBoardGraph;
 
     public AdvancedBotRunner(ApiKey apiKey, Class<? extends AdvancedBot> botClass, GenericUrl gameUrl) throws
@@ -89,7 +91,7 @@ public class AdvancedBotRunner implements Runnable {
 
                 // Update the internal state of the mine ownership and hero locations
                 updateMines(gameState.getGame().getBoard());
-                updateHeroes(gameState.getGame().getBoard());
+                updateHeroes(gameState.getGame());
             }
 
         } catch (Exception e) {
@@ -101,14 +103,29 @@ public class AdvancedBotRunner implements Runnable {
      * Updates the mines map to reflect changes in ownership
      */
     private void updateMines(GameState.Board board) {
-        // TODO Impl me
+        for(Mine currentMine : this.mines.values()) {
+            int tileStart = currentMine.getPosition().getY() * board.getSize() * 2 + currentMine.getPosition().getY();
+
+            // Get just the number after the "$"
+            String mineFromMap = board.getTiles().substring(tileStart + 1, tileStart + 1 + 1);
+
+            if(mineFromMap.equals(" ")) {
+                currentMine.setOwner(null);
+            } else {
+                int heroId = Integer.parseInt(mineFromMap);
+                currentMine.setOwner(this.heroById.get(heroId));
+            }
+        }
     }
 
     /**
-     * Updates the heroesByPosition map to reflect changes in position
+     * Updates the heroesByPosition map to reflect changes in position and status
      */
-    private void updateHeroes(GameState.Board board) {
-        // TODO Impl me
+    private void updateHeroes(GameState.Game game) {
+        for(GameState.Hero currentHero : game.getHeroes()) {
+            this.herosByPosition.put(currentHero.getPos(), currentHero);
+            this.heroById.put(currentHero.getId(), currentHero);
+        }
     }
 
     /**

@@ -6,8 +6,10 @@ import com.brianstempin.vindiniumclient.dto.GameState;
  * Represents a mine on the map
  */
 public class Mine {
+
+    // Mines don't move, but the owners change
     private final GameState.Position position;
-    private final GameState.Hero owner;
+    private GameState.Hero owner;
 
     public Mine(GameState.Position position, GameState.Hero owner) {
         this.position = position;
@@ -21,4 +23,6 @@ public class Mine {
     public GameState.Hero getOwner() {
         return owner;
     }
+
+    public void setOwner(GameState.Hero hero) { this.owner = hero; }
 }

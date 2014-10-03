@@ -11,8 +11,7 @@ import java.util.Map;
 public class AdvancedMurderBot implements AdvancedBot {
 
     @Override
-    public BotMove move(GameState.Hero me, Map<GameState.Position, Mine> mines, Map<GameState.Position, Pub> pubs,
-                        Map<GameState.Position, GameState.Hero> heroes, Map<GameState.Position, Vertex> boardGraph) {
+    public BotMove move(AdvancedGameState gameState) {
         return null;
     }
 

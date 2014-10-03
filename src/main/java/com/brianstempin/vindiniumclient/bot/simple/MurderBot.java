@@ -33,9 +33,7 @@ public class MurderBot implements SimpleBot {
         for (int row = 0; row < board.getSize(); row++) {
             for (int col = 0; col < board.getSize(); col++) {
                 Vertex v = new Vertex();
-                GameState.Position pos = new GameState.Position();
-                pos.setX(row);
-                pos.setY(col);
+                GameState.Position pos = new GameState.Position(row, col);
                 int tileStart = row * board.getSize() * 2 + (col * 2);
                 v.setTileType(board.getTiles().substring(tileStart, tileStart + 1 + 1));
                 v.setPosition(pos);

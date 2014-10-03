@@ -36,14 +36,6 @@ public class AdvancedBotRunner implements Runnable {
     private final GenericUrl gameUrl;
     private final AdvancedBot bot;
 
-    // TODO Other than the strictly immutable stuff, should I be storing ANY of this state here?
-    // Semi-mutable.  Once in the map, the objects stay there.  THe state of the map values may change.
-    private Map<GameState.Position, Mine> mines;
-    // TODO Taverns should be immutable.
-    private Map<GameState.Position, Pub> pubs;
-    private Map<GameState.Position, GameState.Hero> herosByPosition;
-    private Map<Integer, GameState.Hero> heroById;
-
     // Effectively immutable.  They are mutable but not designed to be.
     // TODO The map itself should be immutable.  Consider using Guava
     private Map<GameState.Position, Vertex> immutableBoardGraph;
@@ -71,15 +63,11 @@ public class AdvancedBotRunner implements Runnable {
             response = request.execute();
             gameState = response.parseAs(GameState.class);
 
-            this.initialParse(gameState);
+            AdvancedGameState advancedGameState = new AdvancedGameState(gameState);
 
             // Game loop
             while (!gameState.getGame().isFinished() && !gameState.getHero().isCrashed()) {
-                BotMove direction = bot.move(gameState.getHero(),
-                        this.mines,
-                        this.pubs,
-                        this.herosByPosition,
-                        this.immutableBoardGraph);
+                BotMove direction = bot.move(advancedGameState);
                 Move move = new Move(apiKey.getKey(), direction.toString());
 
 
@@ -89,111 +77,10 @@ public class AdvancedBotRunner implements Runnable {
 
                 gameState = turnResponse.parseAs(GameState.class);
 
-                // Update the internal state of the mine ownership and hero locations
-                updateMines(gameState.getGame().getBoard());
-                updateHeroes(gameState.getGame());
             }
 
         } catch (Exception e) {
-
-        }
-    }
-
-    /**
-     * Updates the mines map to reflect changes in ownership
-     */
-    private void updateMines(GameState.Board board) {
-        for(Mine currentMine : this.mines.values()) {
-            int tileStart = currentMine.getPosition().getY() * board.getSize() * 2 + currentMine.getPosition().getY();
-
-            // Get just the number after the "$"
-            String mineFromMap = board.getTiles().substring(tileStart + 1, tileStart + 1 + 1);
-
-            if(mineFromMap.equals(" ")) {
-                currentMine.setOwner(null);
-            } else {
-                int heroId = Integer.parseInt(mineFromMap);
-                currentMine.setOwner(this.heroById.get(heroId));
-            }
-        }
-    }
-
-    /**
-     * Updates the heroesByPosition map to reflect changes in position and status
-     */
-    private void updateHeroes(GameState.Game game) {
-        for(GameState.Hero currentHero : game.getHeroes()) {
-            this.herosByPosition.put(currentHero.getPos(), currentHero);
-            this.heroById.put(currentHero.getId(), currentHero);
-        }
-    }
-
-    /**
-     * Parser that gets used after the initial gamestate is received
-     * <p/>
-     * This parser sets up a bunch of the immutable structures so that the rest of the turns can use a simpler, faster
-     * parser.
-     *
-     * @param gameState
-     */
-    private void initialParse(GameState gameState) {
-        // Build the graph sans edges
-        GameState.Board board = gameState.getGame().getBoard();
-        for (int row = 0; row < board.getSize(); row++) {
-            for (int col = 0; col < board.getSize(); col++) {
-                GameState.Position pos = new GameState.Position();
-                pos.setX(row);
-                pos.setY(col);
-
-                Vertex v = new Vertex(pos, new LinkedList<Vertex>());
-                int tileStart = row * board.getSize() * 2 + (col * 2);
-                String tileValue = board.getTiles().substring(tileStart, tileStart + 1 + 1);
-
-                // We do nothing with tiles that are barriers
-                if (tileValue.equals("##"))
-                    continue;
-
-                this.immutableBoardGraph.put(v.getPosition(), v);
-
-                // If its a mine or tavern, we treat it differently
-                if (tileValue.startsWith("$")) {
-                    String owner = tileValue.substring(1);
-                    Mine mine;
-                    if (owner.equals(" ")) {
-                        mine = new Mine(pos, null);
-                    } else {
-                        int ownerId = Integer.parseInt(owner);
-                        mine = new Mine(pos, this.heroById.get(ownerId));
-                    }
-
-                    this.mines.put(pos, mine);
-                } else if (tileValue.equals("[]")) {
-                    Pub pub = new Pub(pos);
-                    this.pubs.put(pos, pub);
-                }
-            }
-        }
-
-        // Add in the edges
-        // This graph doesn't take into account players because they move.  That is done elsewhere.
-        for (Vertex currentVertex : this.immutableBoardGraph.values()) {
-            GameState.Position currentVertexPosition = currentVertex.getPosition();
-
-            // Pubs and mines can't be passed through
-            if(this.mines.containsKey(currentVertexPosition) || this.pubs.containsKey(currentVertexPosition))
-                continue;
-
-            for (int xDelta = -1; xDelta <= 1; xDelta += 2) {
-                for (int yDelta = -1; yDelta <= 1; yDelta += 2) {
-                    GameState.Position adjacentPosition = new GameState.Position();
-                    adjacentPosition.setX(currentVertexPosition.getX() + xDelta);
-                    adjacentPosition.setY(currentVertexPosition.getY() + yDelta);
-
-                    Vertex adjacentVertex = this.immutableBoardGraph.get(adjacentPosition);
-                    if (adjacentVertex != null)
-                        currentVertex.getAdjacentVertices().add(adjacentVertex);
-                }
-            }
+            // TODO Log exception and end game
         }
     }
 }

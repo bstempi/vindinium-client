@@ -103,6 +103,14 @@ public class AdvancedGameState {
         this.boardGraph = oldGameState.getBoardGraph();
         this.pubs = oldGameState.getPubs();
 
+        // Re-build the hero maps
+        this.heroesByPosition = new HashMap<>();
+        this.heroesById = new HashMap<>();
+        for(GameState.Hero currentHero : updatedState.getGame().getHeroes()) {
+            this.heroesByPosition.put(currentHero.getPos(), currentHero);
+            this.heroesById.put(currentHero.getId(), currentHero);
+        }
+
         // Update the mines
         this.mines = oldGameState.getMines();
         for(Mine currentMine : this.mines.values()) {
@@ -120,12 +128,6 @@ public class AdvancedGameState {
             }
 
             this.mines.put(mine.getPosition(), mine);
-        }
-
-        // Re-build the hero maps
-        for(GameState.Hero currentHero : updatedState.getGame().getHeroes()) {
-            this.heroesByPosition.put(currentHero.getPos(), currentHero);
-            this.heroesById.put(currentHero.getId(), currentHero);
         }
     }
 

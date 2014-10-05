@@ -76,7 +76,7 @@ public class AdvancedBotRunner implements Runnable {
                 HttpResponse turnResponse = turnRequest.execute();
 
                 gameState = turnResponse.parseAs(GameState.class);
-
+                advancedGameState = new AdvancedGameState(advancedGameState, gameState);
             }
 
         } catch (Exception e) {

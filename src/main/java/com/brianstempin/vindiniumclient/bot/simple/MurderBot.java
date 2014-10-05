@@ -1,6 +1,7 @@
 package com.brianstempin.vindiniumclient.bot.simple;
 
 import com.brianstempin.vindiniumclient.bot.BotMove;
+import com.brianstempin.vindiniumclient.bot.BotUtils;
 import com.brianstempin.vindiniumclient.dto.GameState;
 
 import java.util.*;
@@ -108,20 +109,6 @@ public class MurderBot implements SimpleBot {
         return path;
     }
 
-    private static BotMove directionTowards(GameState.Position currentLocation, GameState.Position target) {
-        if (target.getX() < currentLocation.getX()) {
-            return BotMove.NORTH;
-        } else if (target.getX() > currentLocation.getX()) {
-            return BotMove.SOUTH;
-        } else if (target.getY() < currentLocation.getY()) {
-            return BotMove.WEST;
-        } else if (target.getY() > currentLocation.getY()) {
-            return BotMove.EAST;
-        } else {
-            return BotMove.STAY;
-        }
-    }
-
     private boolean runAwayMode = false;
 
     @Override
@@ -151,13 +138,13 @@ public class MurderBot implements SimpleBot {
             runAwayMode = true;
             Vertex move = getPath(closestPub).get(0);
             logger.info("Getting beer");
-            return directionTowards(gameState.getHero().getPos(), move.getPosition());
+            return BotUtils.directionTowards(gameState.getHero().getPos(), move.getPosition());
         }
 
         if (runAwayMode == true && gameState.getHero().getGold() >= 2 && gameState.getHero().getLife() <= 80) {
             Vertex move = getPath(closestPub).get(0);
             logger.info("Getting beer");
-            return directionTowards(gameState.getHero().getPos(), move.getPosition());
+            return BotUtils.directionTowards(gameState.getHero().getPos(), move.getPosition());
         } else {
             runAwayMode = false;
         }
@@ -165,7 +152,7 @@ public class MurderBot implements SimpleBot {
         // Step two:  Shank someone.
         Vertex move = getPath(closestPlayer).get(0);
         logger.info("Going after player");
-        return directionTowards(gameState.getHero().getPos(), move.getPosition());
+        return BotUtils.directionTowards(gameState.getHero().getPos(), move.getPosition());
 
     }
 

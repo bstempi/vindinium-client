@@ -11,9 +11,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-/**
- * Created by bstempi on 10/3/14.
- */
 public class AdvancedGameStateTest {
     private static final String KNOWN_GOOD_GAME_STATE = "/known-good-game-state.json";
     private static final String KNOWN_GOOD_GAME_STATE_2 = "/known-good-game-state-2.json";
@@ -38,9 +35,9 @@ public class AdvancedGameStateTest {
         Assert.assertNotNull(testObj.getMines());
         Assert.assertNotNull(testObj.getPubs());
         // Test a mine with an owner
-        Assert.assertEquals(testObj.getMines().get(new GameState.Position(7, 3)).getOwner().getId(), 4);
+        Assert.assertEquals(testObj.getMines().get(new GameState.Position(3, 7)).getOwner().getId(), 4);
         // Test a mine without an owner
-        Assert.assertNull(testObj.getMines().get(new GameState.Position(7, 14)).getOwner());
+        Assert.assertNull(testObj.getMines().get(new GameState.Position(14, 7)).getOwner());
     }
 
     @Test
@@ -54,6 +51,17 @@ public class AdvancedGameStateTest {
         AdvancedGameState testObj = new AdvancedGameState(originalGameState, secondGameState);
 
         Assert.assertEquals(testObj.getHeroesById().get(1).getLife(), 100);
-        Assert.assertNull(testObj.getMines().get(new GameState.Position(7, 3)).getOwner());
+        Assert.assertNull(testObj.getMines().get(new GameState.Position(3, 7)).getOwner());
+    }
+
+    @Test
+    public void boardGraph() throws FileNotFoundException {
+        File jsonFile = new File(this.getClass().getResource(KNOWN_GOOD_GAME_STATE).getFile());
+        GameState gameState = gson.fromJson(new FileReader(jsonFile), GameState.class);
+
+        AdvancedGameState testObj = new AdvancedGameState(gameState);
+        Vertex heroVertex = testObj.getBoardGraph().get(testObj.getMe().getPos());
+
+        Assert.assertNotNull(heroVertex);
     }
 }

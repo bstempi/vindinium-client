@@ -39,9 +39,8 @@ public class AdvancedGameState {
         GameState.Board board = gameState.getGame().getBoard();
         for (int row = 0; row < board.getSize(); row++) {
             for (int col = 0; col < board.getSize(); col++) {
-                GameState.Position pos = new GameState.Position(col, row);
-
-                Vertex v = new Vertex(pos, new LinkedList<Vertex>());
+                // Yeah, Vindinium does the x and y coordinates backwards
+                GameState.Position pos = new GameState.Position(row, col);
                 int tileStart = row * board.getSize() * 2 + (col * 2);
                 String tileValue = board.getTiles().substring(tileStart, tileStart + 1 + 1);
 
@@ -49,9 +48,12 @@ public class AdvancedGameState {
                 if (tileValue.equals("##"))
                     continue;
 
-                this.boardGraph.put(v.getPosition(), v);
+                Vertex v = new Vertex(pos, new LinkedList<Vertex>());
+
+                this.boardGraph.put(pos, v);
 
                 // If its a mine or tavern, we treat it differently
+                // We don't care if its a hero because a separate index for those already exists
                 if (tileValue.startsWith("$")) {
                     String owner = tileValue.substring(1);
                     Mine mine;
@@ -75,17 +77,32 @@ public class AdvancedGameState {
         for (Vertex currentVertex : this.boardGraph.values()) {
             GameState.Position currentVertexPosition = currentVertex.getPosition();
 
-            // Pubs and mines can't be passed through
+            // Pubs and mines cannot be passed through
             if(this.mines.containsKey(currentVertexPosition) || this.pubs.containsKey(currentVertexPosition))
                 continue;
 
-            for (int xDelta = -1; xDelta <= 1; xDelta += 2) {
-                for (int yDelta = -1; yDelta <= 1; yDelta += 2) {
-                    GameState.Position adjacentPosition = new GameState.Position(currentVertexPosition.getX() + xDelta,
-                            currentVertexPosition.getY() + yDelta);
+            // Other players cannot be passed through
+            if(this.heroesByPosition.containsKey(currentVertexPosition) && !this.me.getPos().equals(currentVertexPosition))
+                continue;
 
-                    Vertex adjacentVertex = this.boardGraph.get(adjacentPosition);
-                    if (adjacentVertex != null)
+            // We can only move NSEW, so no need for a fancy set of nested loops...
+            for (int xDelta = -1; xDelta <= 1; xDelta += 2) {
+                int currentX = currentVertex.getPosition().getX();
+                int newX = currentX + xDelta;
+                if(newX >= 0 && newX <board.getSize()) {
+                    GameState.Position adjacentPos = new GameState.Position(newX, currentVertex.getPosition().getY());
+                    Vertex adjacentVertex = this.boardGraph.get(adjacentPos);
+                    if(adjacentVertex != null)
+                        currentVertex.getAdjacentVertices().add(adjacentVertex);
+                }
+            }
+            for (int yDelta = -1; yDelta <= 1; yDelta += 2) {
+                int currentY = currentVertex.getPosition().getY();
+                int newY = currentY + yDelta;
+                if(newY >= 0 && newY <board.getSize()) {
+                    GameState.Position adjacentPos = new GameState.Position( currentVertex.getPosition().getX(), newY);
+                    Vertex adjacentVertex = this.boardGraph.get(adjacentPos);
+                    if(adjacentVertex != null)
                         currentVertex.getAdjacentVertices().add(adjacentVertex);
                 }
             }
@@ -114,9 +131,10 @@ public class AdvancedGameState {
         // Update the mines
         this.mines = oldGameState.getMines();
         for(Mine currentMine : this.mines.values()) {
-            int tileStart = currentMine.getPosition().getY()
+            // Vindinium does the x and y coordinates backwards
+            int tileStart = currentMine.getPosition().getX()
                     * updatedState.getGame().getBoard().getSize()
-                    *  2 + (currentMine.getPosition().getX() * 2);
+                    *  2 + (currentMine.getPosition().getY() * 2);
             // We don't want the whole tile; we want the second char
             String owner = updatedState.getGame().getBoard().getTiles().substring(tileStart + 1, tileStart + 1 + 1);
             Mine mine;

@@ -1,6 +1,9 @@
-package com.brianstempin.vindiniumclient.bot.advanced;
+package com.brianstempin.vindiniumclient.bot.advanced.murderbot;
 
 import com.brianstempin.vindiniumclient.bot.BotMove;
+import com.brianstempin.vindiniumclient.bot.advanced.AdvancedBot;
+import com.brianstempin.vindiniumclient.bot.advanced.AdvancedGameState;
+import com.brianstempin.vindiniumclient.bot.advanced.Vertex;
 import com.brianstempin.vindiniumclient.dto.GameState;
 
 import java.util.HashMap;
@@ -73,9 +76,7 @@ public class AdvancedMurderBot implements AdvancedBot {
 
         Map<GameState.Position, DijkstraResult> dijkstraResultMap = dijkstraSearch(gameState);
 
-
-
-        return null;
+        return BotMove.STAY;
 
     }
 

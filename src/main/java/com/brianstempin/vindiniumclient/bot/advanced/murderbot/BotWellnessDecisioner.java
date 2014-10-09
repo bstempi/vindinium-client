@@ -1,8 +1,8 @@
 package com.brianstempin.vindiniumclient.bot.advanced.murderbot;
 
 import com.brianstempin.vindiniumclient.bot.BotMove;
-import com.brianstempin.vindiniumclient.bot.advanced.AdvancedGameState;
-import com.sun.istack.internal.logging.Logger;
+
+import java.util.logging.Logger;
 
 /**
  * Decides if the bot is "well" (healthy) and acts accordingly.
@@ -13,7 +13,7 @@ import com.sun.istack.internal.logging.Logger;
  */
 public class BotWellnessDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
 
-    private static final Logger logger = Logger.getLogger(BotWellnessDecisioner.class);
+    private static final Logger logger = Logger.getLogger("BotWellnessDecisioner");
 
     private final Decision<AdvancedMurderBot.GameContext, BotMove> yesDecisioner;
     private final Decision<AdvancedMurderBot.GameContext, BotMove> noDecisioner;

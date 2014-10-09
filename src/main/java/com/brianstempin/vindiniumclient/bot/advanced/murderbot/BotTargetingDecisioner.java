@@ -2,11 +2,11 @@ package com.brianstempin.vindiniumclient.bot.advanced.murderbot;
 
 import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.bot.BotUtils;
-import com.brianstempin.vindiniumclient.bot.advanced.AdvancedGameState;
 import com.brianstempin.vindiniumclient.bot.advanced.Mine;
 import com.brianstempin.vindiniumclient.bot.advanced.Vertex;
 import com.brianstempin.vindiniumclient.dto.GameState;
-import com.sun.istack.internal.logging.Logger;
+
+import java.util.logging.Logger;
 
 /**
  * Figures out who to shank
@@ -17,7 +17,7 @@ import com.sun.istack.internal.logging.Logger;
  */
 public class BotTargetingDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
 
-    private static final Logger logger = Logger.getLogger(BotTargetingDecisioner.class);
+    private static final Logger logger = Logger.getLogger("BotTargetingDecisioner");
 
     private final Decision<AdvancedMurderBot.GameContext, BotMove> noTargetFoundDecisioner;
 

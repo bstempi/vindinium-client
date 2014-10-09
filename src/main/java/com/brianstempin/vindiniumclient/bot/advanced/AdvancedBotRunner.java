@@ -2,10 +2,6 @@ package com.brianstempin.vindiniumclient.bot.advanced;
 
 import com.brianstempin.vindiniumclient.Main;
 import com.brianstempin.vindiniumclient.bot.BotMove;
-import com.brianstempin.vindiniumclient.bot.advanced.AdvancedBot;
-import com.brianstempin.vindiniumclient.bot.advanced.Mine;
-import com.brianstempin.vindiniumclient.bot.advanced.Pub;
-import com.brianstempin.vindiniumclient.bot.advanced.Vertex;
 import com.brianstempin.vindiniumclient.bot.advanced.murderbot.AdvancedMurderBot;
 import com.brianstempin.vindiniumclient.dto.ApiKey;
 import com.brianstempin.vindiniumclient.dto.GameState;
@@ -15,10 +11,8 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.gson.GsonFactory;
-import com.sun.istack.internal.logging.Logger;
 
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by bstempi on 9/28/14.
@@ -33,7 +27,7 @@ public class AdvancedBotRunner implements Runnable {
                     request.setParser(new JsonObjectParser(JSON_FACTORY));
                 }
             });
-    private static final Logger logger = Logger.getLogger(AdvancedBotRunner.class);
+    private static final Logger logger = Logger.getLogger("AdvancedBotRunner");
 
     private final ApiKey apiKey;
     private final Class<? extends AdvancedBot> botClass;
@@ -91,7 +85,8 @@ public class AdvancedBotRunner implements Runnable {
             }
 
         } catch (Exception e) {
-            logger.severe("Game ended abruptly", e);
+            logger.severe("Error during gameplay");
+            e.printStackTrace();
         }
 
         logger.info("Game over");

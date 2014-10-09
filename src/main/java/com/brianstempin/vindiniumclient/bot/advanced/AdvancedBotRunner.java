@@ -1,10 +1,12 @@
 package com.brianstempin.vindiniumclient.bot.advanced;
 
+import com.brianstempin.vindiniumclient.Main;
 import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.bot.advanced.AdvancedBot;
 import com.brianstempin.vindiniumclient.bot.advanced.Mine;
 import com.brianstempin.vindiniumclient.bot.advanced.Pub;
 import com.brianstempin.vindiniumclient.bot.advanced.Vertex;
+import com.brianstempin.vindiniumclient.bot.advanced.murderbot.AdvancedMurderBot;
 import com.brianstempin.vindiniumclient.dto.ApiKey;
 import com.brianstempin.vindiniumclient.dto.GameState;
 import com.brianstempin.vindiniumclient.dto.Move;
@@ -13,6 +15,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.gson.GsonFactory;
+import com.sun.istack.internal.logging.Logger;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -30,15 +33,20 @@ public class AdvancedBotRunner implements Runnable {
                     request.setParser(new JsonObjectParser(JSON_FACTORY));
                 }
             });
+    private static final Logger logger = Logger.getLogger(AdvancedBotRunner.class);
 
     private final ApiKey apiKey;
     private final Class<? extends AdvancedBot> botClass;
     private final GenericUrl gameUrl;
     private final AdvancedBot bot;
 
-    // Effectively immutable.  They are mutable but not designed to be.
-    // TODO The map itself should be immutable.  Consider using Guava
-    private Map<GameState.Position, Vertex> immutableBoardGraph;
+    // TODO REMOVE THIS -- this is not meant to be perm
+    public static void main(String[] args) throws Exception {
+        Class<AdvancedMurderBot> botClass = AdvancedMurderBot.class;
+        ApiKey apiKey = new ApiKey("ch76chvi");
+        AdvancedBotRunner runner = new AdvancedBotRunner(apiKey, botClass, Main.VindiniumUrl.getTrainingUrl());
+        runner.run();
+    }
 
     public AdvancedBotRunner(ApiKey apiKey, Class<? extends AdvancedBot> botClass, GenericUrl gameUrl) throws
             IllegalAccessException, InstantiationException {
@@ -57,16 +65,19 @@ public class AdvancedBotRunner implements Runnable {
 
         try {
             // Initial request
+            logger.info("Sending initial request...");
             content = new UrlEncodedContent(apiKey);
             request = REQUEST_FACTORY.buildPostRequest(gameUrl, content);
             request.setReadTimeout(0); // Wait forever to be assigned to a game
             response = request.execute();
             gameState = response.parseAs(GameState.class);
+            logger.info(gameState.getViewUrl());
 
             AdvancedGameState advancedGameState = new AdvancedGameState(gameState);
 
             // Game loop
             while (!gameState.getGame().isFinished() && !gameState.getHero().isCrashed()) {
+                logger.info("Taking turn");
                 BotMove direction = bot.move(advancedGameState);
                 Move move = new Move(apiKey.getKey(), direction.toString());
 
@@ -80,7 +91,9 @@ public class AdvancedBotRunner implements Runnable {
             }
 
         } catch (Exception e) {
-            // TODO Log exception and end game
+            logger.severe("Game ended abruptly", e);
         }
+
+        logger.info("Game over");
     }
 }

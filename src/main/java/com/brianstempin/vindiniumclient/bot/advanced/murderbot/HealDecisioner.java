@@ -4,6 +4,7 @@ import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.bot.BotUtils;
 import com.brianstempin.vindiniumclient.bot.advanced.Pub;
 import com.brianstempin.vindiniumclient.dto.GameState;
+import com.sun.istack.internal.logging.Logger;
 
 import java.util.Map;
 
@@ -15,8 +16,12 @@ import java.util.Map;
  * On the Maslow Hierarchy, this falls under safety.
  */
 public class HealDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
+
+    private static final Logger logger = Logger.getLogger(HealDecisioner.class);
+
     @Override
     public BotMove makeDecision(AdvancedMurderBot.GameContext context) {
+        logger.info("Running to nearest pub.");
 
         Map<GameState.Position, AdvancedMurderBot.DijkstraResult> dijkstraResultMap = context.getDijkstraResultMap();
 

@@ -32,7 +32,8 @@ public class EnRouteLootingDecisioner implements Decision<AdvancedMurderBot.Game
         // Are we next to a mine that isn't ours?
         for(Vertex currentVertex : boardGraph.get(myPosition).getAdjacentVertices()) {
             Mine mine = context.getGameState().getMines().get(currentVertex.getPosition());
-            if(mine != null && mine.getOwner() != context.getGameState().getMe()) {
+            if(mine != null && (mine.getOwner() == null
+                    || mine.getOwner().getId() != context.getGameState().getMe().getId())) {
                 return BotUtils.directionTowards(myPosition, mine.getPosition());
             }
         }

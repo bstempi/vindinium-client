@@ -2,6 +2,7 @@ package com.brianstempin.vindiniumclient.bot.advanced.murderbot;
 
 import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.bot.advanced.AdvancedGameState;
+import com.sun.istack.internal.logging.Logger;
 
 /**
  * Decides if the bot is "well" (healthy) and acts accordingly.
@@ -11,6 +12,8 @@ import com.brianstempin.vindiniumclient.bot.advanced.AdvancedGameState;
  * On Maslow's Hierarchy of needs, this one services psychological and safety needs.
  */
 public class BotWellnessDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
+
+    private static final Logger logger = Logger.getLogger(BotWellnessDecisioner.class);
 
     private final Decision<AdvancedMurderBot.GameContext, BotMove> yesDecisioner;
     private final Decision<AdvancedMurderBot.GameContext, BotMove> noDecisioner;
@@ -23,9 +26,15 @@ public class BotWellnessDecisioner implements Decision<AdvancedMurderBot.GameCon
 
     @Override
     public BotMove makeDecision(AdvancedMurderBot.GameContext context) {
-        if(context.getGameState().getMe().getLife() < 30)
-            return noDecisioner.makeDecision(context);
-        else
+
+        // Is the bot well?
+        if(context.getGameState().getMe().getLife() >= 30) {
+            logger.info("Bot is healthy.");
             return yesDecisioner.makeDecision(context);
+        }
+        else {
+            logger.info("Bot is damaged.");
+            return noDecisioner.makeDecision(context);
+        }
     }
 }

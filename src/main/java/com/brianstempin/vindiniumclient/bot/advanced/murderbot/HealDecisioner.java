@@ -1,7 +1,11 @@
 package com.brianstempin.vindiniumclient.bot.advanced.murderbot;
 
 import com.brianstempin.vindiniumclient.bot.BotMove;
-import com.brianstempin.vindiniumclient.bot.advanced.AdvancedGameState;
+import com.brianstempin.vindiniumclient.bot.BotUtils;
+import com.brianstempin.vindiniumclient.bot.advanced.Pub;
+import com.brianstempin.vindiniumclient.dto.GameState;
+
+import java.util.Map;
 
 /**
  * Decides the best way to get healed.
@@ -10,9 +14,29 @@ import com.brianstempin.vindiniumclient.bot.advanced.AdvancedGameState;
  *
  * On the Maslow Hierarchy, this falls under safety.
  */
-public class HealDecisioner implements Decision<AdvancedGameState, BotMove> {
+public class HealDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
     @Override
-    public BotMove makeDecision(AdvancedGameState state) {
-        return null;
+    public BotMove makeDecision(AdvancedMurderBot.GameContext context) {
+
+        Map<GameState.Position, AdvancedMurderBot.DijkstraResult> dijkstraResultMap = context.getDijkstraResultMap();
+
+        // Run to the nearest pub
+        Pub nearestPub = null;
+        AdvancedMurderBot.DijkstraResult nearestPubDijkstraResult = null;
+        for(Pub pub : context.getGameState().getPubs().values()) {
+            if(nearestPub == null || nearestPubDijkstraResult.getDistance() >
+                    dijkstraResultMap.get(pub.getPosition()).getDistance()) {
+                nearestPub = pub;
+                nearestPubDijkstraResult = dijkstraResultMap.get(pub.getPosition());
+            }
+        }
+
+        GameState.Position nextMove = nearestPub.getPosition();
+        while(nearestPubDijkstraResult.getDistance() > 1) {
+            nextMove = nearestPubDijkstraResult.getPrevious();
+            nearestPubDijkstraResult = dijkstraResultMap.get(nextMove);
+        }
+
+        return BotUtils.directionTowards(nearestPubDijkstraResult.getPrevious(), nextMove);
     }
 }

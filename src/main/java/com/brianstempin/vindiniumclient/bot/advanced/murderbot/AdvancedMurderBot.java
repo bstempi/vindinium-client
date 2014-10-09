@@ -89,12 +89,34 @@ public class AdvancedMurderBot implements AdvancedBot {
         return result;
     }
 
+    private final Decision<GameContext, BotMove> decisioner;
+
+    public AdvancedMurderBot() {
+
+        // Chain decisioners together
+        SquatDecisioner squatDecisioner = new SquatDecisioner();
+        UnattendedMineDecisioner unattendedMineDecisioner = new UnattendedMineDecisioner(squatDecisioner);
+        BotTargetingDecisioner botTargetingDecisioner = new BotTargetingDecisioner(unattendedMineDecisioner);
+        EnRouteLootingDecisioner enRouteLootingDecisioner = new EnRouteLootingDecisioner(botTargetingDecisioner);
+
+        HealDecisioner healDecisioner = new HealDecisioner();
+        CombatOutcomeDecisioner combatOutcomeDecisioner = new CombatOutcomeDecisioner(botTargetingDecisioner,
+                botTargetingDecisioner);
+        CombatEngagementDecisioner combatEngagementDecisioner = new CombatEngagementDecisioner(combatOutcomeDecisioner,
+                healDecisioner);
+        BotWellnessDecisioner botWellnessDecisioner = new BotWellnessDecisioner(combatEngagementDecisioner, healDecisioner);
+
+        this.decisioner = botWellnessDecisioner;
+
+    }
+
     @Override
     public BotMove move(AdvancedGameState gameState) {
 
         Map<GameState.Position, DijkstraResult> dijkstraResultMap = dijkstraSearch(gameState);
 
-        return BotMove.STAY;
+        GameContext context = new GameContext(gameState, dijkstraResultMap);
+        return this.decisioner.makeDecision(context);
 
     }
 

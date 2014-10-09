@@ -37,6 +37,7 @@ public class AdvancedBotRunner implements Runnable {
     // TODO REMOVE THIS -- this is not meant to be perm
     public static void main(String[] args) throws Exception {
         Class<AdvancedMurderBot> botClass = AdvancedMurderBot.class;
+        // TODO Burn this key and never use it again.
         ApiKey apiKey = new ApiKey("ch76chvi");
         AdvancedBotRunner runner = new AdvancedBotRunner(apiKey, botClass, Main.VindiniumUrl.getTrainingUrl());
         runner.run();

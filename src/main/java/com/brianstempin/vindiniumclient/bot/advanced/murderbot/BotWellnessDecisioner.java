@@ -10,22 +10,22 @@ import com.brianstempin.vindiniumclient.bot.advanced.AdvancedGameState;
  *
  * On Maslow's Hierarchy of needs, this one services psychological and safety needs.
  */
-public class BotWellnessDecisioner implements Decision<AdvancedGameState, BotMove> {
+public class BotWellnessDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
 
-    private final Decision<AdvancedGameState, BotMove> yesDecisioner;
-    private final Decision<AdvancedGameState, BotMove> noDecisioner;
+    private final Decision<AdvancedMurderBot.GameContext, BotMove> yesDecisioner;
+    private final Decision<AdvancedMurderBot.GameContext, BotMove> noDecisioner;
 
-    public BotWellnessDecisioner(Decision<AdvancedGameState, BotMove> yesDecisioner, Decision<AdvancedGameState,
-            BotMove> noDecisioner) {
+    public BotWellnessDecisioner(Decision<AdvancedMurderBot.GameContext, BotMove> yesDecisioner,
+                                 Decision<AdvancedMurderBot.GameContext, BotMove> noDecisioner) {
         this.yesDecisioner = yesDecisioner;
         this.noDecisioner = noDecisioner;
     }
 
     @Override
-    public BotMove makeDecision(AdvancedGameState state) {
-        if(state.getMe().getLife() < 30)
-            return noDecisioner.makeDecision(state);
+    public BotMove makeDecision(AdvancedMurderBot.GameContext context) {
+        if(context.getGameState().getMe().getLife() < 30)
+            return noDecisioner.makeDecision(context);
         else
-            return yesDecisioner.makeDecision(state);
+            return yesDecisioner.makeDecision(context);
     }
 }

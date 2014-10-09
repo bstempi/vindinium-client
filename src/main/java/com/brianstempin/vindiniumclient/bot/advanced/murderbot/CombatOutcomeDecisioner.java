@@ -12,33 +12,34 @@ import com.brianstempin.vindiniumclient.dto.GameState;
  *
  * On the Maslow Hierarchy, this falls under safety.
  */
-public class CombatOutcomeDecisioner implements Decision<AdvancedGameState, BotMove> {
-    private final Decision<AdvancedGameState, BotMove> winningDecisioner;
-    private final Decision<AdvancedGameState, BotMove> losingDecisioner;
+public class CombatOutcomeDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
+    private final Decision<AdvancedMurderBot.GameContext, BotMove> winningDecisioner;
+    private final Decision<AdvancedMurderBot.GameContext, BotMove> losingDecisioner;
 
-    public CombatOutcomeDecisioner(Decision<AdvancedGameState, BotMove> winningDecisioner, Decision
-            <AdvancedGameState, BotMove> losingDecisioner) {
+    public CombatOutcomeDecisioner(Decision<AdvancedMurderBot.GameContext, BotMove> winningDecisioner,
+                                   Decision<AdvancedMurderBot.GameContext, BotMove> losingDecisioner) {
         this.winningDecisioner = winningDecisioner;
         this.losingDecisioner = losingDecisioner;
     }
 
     @Override
-    public BotMove makeDecision(AdvancedGameState state) {
+    public BotMove makeDecision(AdvancedMurderBot.GameContext context) {
         // Who am I fighting?
         GameState.Hero opponent = null;
-        Vertex myVertext = state.getBoardGraph().get(state.getMe().getPos());
+        GameState.Hero me = context.getGameState().getMe();
+        Vertex myVertext = context.getGameState().getBoardGraph().get(me.getPos());
         for(Vertex vertex : myVertext.getAdjacentVertices()) {
-            if(state.getHeroesByPosition().containsKey(vertex.getPosition())) {
-                opponent = state.getHeroesByPosition().get(vertex.getPosition());
+            if(context.getGameState().getHeroesByPosition().containsKey(vertex.getPosition())) {
+                opponent = context.getGameState().getHeroesByPosition().get(vertex.getPosition());
                 break;
             }
         }
 
         // If we have more health than them or they only can take one more hit
-        if(opponent.getLife() <= 20 || state.getMe().getLife() >= 30) {
-            return winningDecisioner.makeDecision(state);
+        if(opponent.getLife() <= 20 || me.getLife() >= 30) {
+            return winningDecisioner.makeDecision(context);
         }  else {
-            return losingDecisioner.makeDecision(state);
+            return losingDecisioner.makeDecision(context);
         }
     }
 }

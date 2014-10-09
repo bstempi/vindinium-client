@@ -17,6 +17,24 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class AdvancedMurderBot implements AdvancedBot {
 
+    public static class GameContext {
+        private final AdvancedGameState gameState;
+        private final Map<GameState.Position, DijkstraResult> dijkstraResultMap;
+
+        public GameContext(AdvancedGameState gameState, Map<GameState.Position, DijkstraResult> dijkstraResultMap) {
+            this.gameState = gameState;
+            this.dijkstraResultMap = dijkstraResultMap;
+        }
+
+        public AdvancedGameState getGameState() {
+            return gameState;
+        }
+
+        public Map<GameState.Position, DijkstraResult> getDijkstraResultMap() {
+            return dijkstraResultMap;
+        }
+    }
+
     /**
      * Represents the result of a Dijkstra search for a given position
      */

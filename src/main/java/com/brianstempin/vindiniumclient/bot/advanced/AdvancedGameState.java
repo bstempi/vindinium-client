@@ -81,15 +81,14 @@ public class AdvancedGameState {
             if(this.mines.containsKey(currentVertexPosition) || this.pubs.containsKey(currentVertexPosition))
                 continue;
 
-            // Other players cannot be passed through
-            if(this.heroesByPosition.containsKey(currentVertexPosition) && !this.me.getPos().equals(currentVertexPosition))
-                continue;
+            // Other players cannot be passed through.  However, they move, and mines/pubs don't, so its easier to make
+            // the bot and path-finding deal with that.  We don't take other players into account here.
 
             // We can only move NSEW, so no need for a fancy set of nested loops...
             for (int xDelta = -1; xDelta <= 1; xDelta += 2) {
                 int currentX = currentVertex.getPosition().getX();
                 int newX = currentX + xDelta;
-                if(newX >= 0 && newX <board.getSize()) {
+                if(newX >= 0 && newX < board.getSize()) {
                     GameState.Position adjacentPos = new GameState.Position(newX, currentVertex.getPosition().getY());
                     Vertex adjacentVertex = this.boardGraph.get(adjacentPos);
                     if(adjacentVertex != null)
@@ -99,7 +98,7 @@ public class AdvancedGameState {
             for (int yDelta = -1; yDelta <= 1; yDelta += 2) {
                 int currentY = currentVertex.getPosition().getY();
                 int newY = currentY + yDelta;
-                if(newY >= 0 && newY <board.getSize()) {
+                if(newY >= 0 && newY < board.getSize()) {
                     GameState.Position adjacentPos = new GameState.Position( currentVertex.getPosition().getX(), newY);
                     Vertex adjacentVertex = this.boardGraph.get(adjacentPos);
                     if(adjacentVertex != null)

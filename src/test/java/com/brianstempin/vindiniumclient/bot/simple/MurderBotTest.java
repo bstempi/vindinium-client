@@ -28,32 +28,5 @@ public class MurderBotTest {
         testObj = new MurderBot();
     }
 
-    @Test
-    public void goodHealthMoveToClosestPlayer() throws FileNotFoundException {
-        File jsonFile = new File(this.getClass().getResource(KNOWN_GOOD_GAME_STATE).getFile());
-        gameState = gson.fromJson(new FileReader(jsonFile), GameState.class);
-
-        BotMove move = testObj.move(gameState);
-        Assert.assertEquals(BotMove.SOUTH, move);
-    }
-
-    // TODO Have different game state for this test
-    @Test
-    public void badHealthMoveToClosestTavern() throws FileNotFoundException {
-        File jsonFile = new File(this.getClass().getResource(KNOWN_GOOD_GAME_STATE).getFile());
-        gameState = gson.fromJson(new FileReader(jsonFile), GameState.class);
-
-        BotMove move = testObj.move(gameState);
-        Assert.assertEquals(BotMove.SOUTH, move);
-    }
-
-    // TODO Have different game state for this test
-    @Test
-    public void shankPlayer() throws FileNotFoundException {
-        File jsonFile = new File(this.getClass().getResource(KNOWN_GOOD_GAME_STATE).getFile());
-        gameState = gson.fromJson(new FileReader(jsonFile), GameState.class);
-
-        BotMove move = testObj.move(gameState);
-        Assert.assertEquals(BotMove.SOUTH, move);
-    }
+    // TODO Figure out how to intelligently name tests
 }

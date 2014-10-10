@@ -65,11 +65,11 @@ public class BotTargetingDecisioner implements Decision<AdvancedMurderBot.GameCo
             }
 
             // Ok, we got this far...it must not be squatting.  Is it closest?
-            if(closestTarget == null) {
+            if (closestTarget == null) {
                 closestTarget = currentHero;
-                closestTargetDijkstraResult = context.getDijkstraResultMap().get(currentHero.getPos());
+                closestTargetDijkstraResult = context.getDijkstraResultMap().get(closestTarget.getPos());
                 continue;
-            } else if(closestTargetDijkstraResult.getDistance() >
+            } else if (closestTargetDijkstraResult.getDistance() >
                     context.getDijkstraResultMap().get(currentHero.getPos()).getDistance()) {
                 closestTarget = currentHero;
                 closestTargetDijkstraResult = context.getDijkstraResultMap().get(closestTarget.getPos());

@@ -1,6 +1,9 @@
 package com.brianstempin.vindiniumclient.bot.advanced.murderbot;
 
 import com.brianstempin.vindiniumclient.bot.BotMove;
+import com.brianstempin.vindiniumclient.bot.BotUtils;
+import com.brianstempin.vindiniumclient.bot.advanced.Vertex;
+import com.brianstempin.vindiniumclient.dto.GameState;
 
 import java.util.logging.Logger;
 
@@ -26,6 +29,30 @@ public class BotWellnessDecisioner implements Decision<AdvancedMurderBot.GameCon
 
     @Override
     public BotMove makeDecision(AdvancedMurderBot.GameContext context) {
+
+        GameState.Hero me = context.getGameState().getMe();
+        Vertex myVertex = context.getGameState().getBoardGraph().get(me.getPos());
+
+        // Do we have money for a pub?
+        if(me.getGold() < 2) {
+            // We're broke...pretend like we're healthy.
+            logger.info("Bot is broke.  Pretending like its healthy.");
+            return yesDecisioner.makeDecision(context);
+        }
+
+        // Is the bot already next to a pub?  Perhaps its worth a drink
+        for(Vertex currentVertex : myVertex.getAdjacentVertices()) {
+            if(context.getGameState().getPubs().containsKey(
+                    currentVertex.getPosition())) {
+                if(me.getLife() < 80) {
+                    logger.info("Bot is next to a pub already and could use health.");
+                    return BotUtils.directionTowards(me.getPos(), currentVertex.getPosition());
+                }
+
+                // Once we find a pub, we don't care about evaluating the rest
+                break;
+            }
+        }
 
         // Is the bot well?
         if(context.getGameState().getMe().getLife() >= 30) {

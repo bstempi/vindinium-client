@@ -1,6 +1,5 @@
 package com.brianstempin.vindiniumclient.bot.advanced;
 
-import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.bot.advanced.murderbot.AdvancedMurderBot;
 import com.brianstempin.vindiniumclient.dto.GameState;
 import com.google.gson.Gson;
@@ -11,6 +10,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.Map;
 
 public class AdvancedMurderBotTest {
 
@@ -28,9 +28,13 @@ public class AdvancedMurderBotTest {
     }
 
     @Test
-    public void goodHealthMoveToClosestEligiblePlayer() {
-        BotMove move = testObj.move(gameState);
+    public void dijkstraTest() {
+        Map<GameState.Position, AdvancedMurderBot.DijkstraResult> dijkstraResultMap =
+                AdvancedMurderBot.dijkstraSearch(gameState);
 
-        Assert.assertEquals(BotMove.SOUTH, move);
+        Assert.assertEquals(88, dijkstraResultMap.size());
     }
+
+    // TODO Think of an intelligent way to name tests
+    // TODO Performance test
 }

@@ -7,7 +7,7 @@ import com.brianstempin.vindiniumclient.dto.GameState;
 /**
  * Decides if a battle is winnable and what to do about it.
  *
- * This decisioner will try to predict a battle's outcome and will decide wether or not to keep fighting.
+ * This decisioner will try to predict a battle's outcome and will decide whether or not to keep fighting.
  *
  * On the Maslow Hierarchy, this falls under safety.
  */

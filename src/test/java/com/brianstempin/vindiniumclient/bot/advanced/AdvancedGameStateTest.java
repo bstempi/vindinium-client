@@ -63,5 +63,6 @@ public class AdvancedGameStateTest {
         Vertex heroVertex = testObj.getBoardGraph().get(testObj.getMe().getPos());
 
         Assert.assertNotNull(heroVertex);
+        Assert.assertEquals(88, testObj.getBoardGraph().size());
     }
 }

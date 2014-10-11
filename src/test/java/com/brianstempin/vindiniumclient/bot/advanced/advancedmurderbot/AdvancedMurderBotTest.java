@@ -1,5 +1,6 @@
-package com.brianstempin.vindiniumclient.bot.advanced;
+package com.brianstempin.vindiniumclient.bot.advanced.advancedmurderbot;
 
+import com.brianstempin.vindiniumclient.bot.advanced.AdvancedGameState;
 import com.brianstempin.vindiniumclient.bot.advanced.murderbot.AdvancedMurderBot;
 import com.brianstempin.vindiniumclient.dto.GameState;
 import com.google.gson.Gson;

@@ -1,14 +1,13 @@
 package com.brianstempin.vindiniumclient.bot.advanced;
 
+import com.brianstempin.vindiniumclient.bot.BotTestingUtils;
 import com.brianstempin.vindiniumclient.dto.GameState;
 import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +24,7 @@ public class AdvancedGameStateTest {
 
     @Test
     public void createFromGameState() throws IOException {
-        File jsonFile = new File(this.getClass().getResource(KNOWN_GOOD_GAME_STATE).getFile());
-        GameState gameState = gson.fromJson(new FileReader(jsonFile), GameState.class);
+        GameState gameState = BotTestingUtils.getGameState(KNOWN_GOOD_GAME_STATE);
 
         AdvancedGameState testObj = new AdvancedGameState(gameState);
 
@@ -46,10 +44,8 @@ public class AdvancedGameStateTest {
 
     @Test
     public void updateState() throws FileNotFoundException {
-        File firstStateFile = new File(this.getClass().getResource(KNOWN_GOOD_GAME_STATE).getFile());
-        File secondStateFile = new File(this.getClass().getResource(KNOWN_GOOD_GAME_STATE_2).getFile());
-        GameState firstGameState = gson.fromJson(new FileReader(firstStateFile), GameState.class);
-        GameState secondGameState = gson.fromJson(new FileReader(secondStateFile), GameState.class);
+        GameState firstGameState = BotTestingUtils.getGameState(KNOWN_GOOD_GAME_STATE);
+        GameState secondGameState = BotTestingUtils.getGameState(KNOWN_GOOD_GAME_STATE_2);
 
         AdvancedGameState originalGameState = new AdvancedGameState(firstGameState);
         AdvancedGameState testObj = new AdvancedGameState(originalGameState, secondGameState);
@@ -60,8 +56,7 @@ public class AdvancedGameStateTest {
 
     @Test
     public void boardGraph() throws FileNotFoundException {
-        File jsonFile = new File(this.getClass().getResource(KNOWN_GOOD_GAME_STATE).getFile());
-        GameState gameState = gson.fromJson(new FileReader(jsonFile), GameState.class);
+        GameState gameState = BotTestingUtils.getGameState(KNOWN_GOOD_GAME_STATE);
 
         AdvancedGameState testObj = new AdvancedGameState(gameState);
         Vertex heroVertex = testObj.getBoardGraph().get(testObj.getMe().getPos());
@@ -73,7 +68,7 @@ public class AdvancedGameStateTest {
         Assert.assertEquals(88, testObj.getBoardGraph().size());
 
         // Make sure that no position on the board returns null for adjacentVertices
-        for(Map.Entry<GameState.Position, Vertex> entry : testObj.getBoardGraph().entrySet()) {
+        for (Map.Entry<GameState.Position, Vertex> entry : testObj.getBoardGraph().entrySet()) {
             List<Vertex> adjacentVertices = entry.getValue().getAdjacentVertices();
 
             Assert.assertNotNull("adjacentVertices() returned a null for position "

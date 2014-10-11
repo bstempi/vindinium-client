@@ -1,5 +1,6 @@
 package com.brianstempin.vindiniumclient.bot.advanced.advancedmurderbot;
 
+import com.brianstempin.vindiniumclient.bot.BotTestingUtils;
 import com.brianstempin.vindiniumclient.bot.advanced.AdvancedGameState;
 import com.brianstempin.vindiniumclient.bot.advanced.murderbot.AdvancedMurderBot;
 import com.brianstempin.vindiniumclient.dto.GameState;
@@ -8,9 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.Map;
 
 public class AdvancedMurderBotTest {
@@ -24,8 +23,7 @@ public class AdvancedMurderBotTest {
     @Before
     public void setup() throws FileNotFoundException {
         this.testObj = new AdvancedMurderBot();
-        File knownGoodStateFile = new File(this.getClass().getResource(KNOWN_GOOD_GAME_STATE).getFile());
-        gameState = new AdvancedGameState(gson.fromJson(new FileReader(knownGoodStateFile), GameState.class));
+        gameState = BotTestingUtils.getAdvancedGameState(KNOWN_GOOD_GAME_STATE);
     }
 
     @Test

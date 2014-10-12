@@ -6,6 +6,8 @@ import com.brianstempin.vindiniumclient.bot.advanced.Mine;
 import com.brianstempin.vindiniumclient.bot.advanced.Vertex;
 import com.brianstempin.vindiniumclient.dto.GameState;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -31,7 +33,7 @@ public class BotTargetingDecisioner implements Decision<AdvancedMurderBot.GameCo
         logger.info("Deciding which bot to target");
         GameState.Hero me = context.getGameState().getMe();
 
-        // Is there a crashed bot with mines we can take advantage of?
+        // Are there a crashed bot with mines we can take advantage of?
         for(Mine currentMine : context.getGameState().getMines().values()) {
             if(currentMine.getOwner() != null && currentMine.getOwner().isCrashed()) {
 
@@ -50,10 +52,18 @@ public class BotTargetingDecisioner implements Decision<AdvancedMurderBot.GameCo
             }
         }
 
+        Set<GameState.Hero> heroesWithMines = new HashSet<>();
+
+        // Which heroes have mines?
+        for(Mine currentMine : context.getGameState().getMines().values()) {
+            if(currentMine.getOwner() != null)
+                heroesWithMines.add(currentMine.getOwner());
+        }
+
         // Ok, crashed bots.  How about bots that aren't squatting?
         GameState.Hero closestTarget = null;
         AdvancedMurderBot.DijkstraResult closestTargetDijkstraResult = null;
-        for(GameState.Hero currentHero : context.getGameState().getHeroesByPosition().values()) {
+        for(GameState.Hero currentHero : heroesWithMines) {
             // We don't want to target ourselves
             if(currentHero.getId() == context.getGameState().getMe().getId())
                 continue;

@@ -6,6 +6,7 @@ import com.brianstempin.vindiniumclient.bot.advanced.Mine;
 import com.brianstempin.vindiniumclient.dto.GameState;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import static com.brianstempin.vindiniumclient.bot.advanced.murderbot.AdvancedMurderBot.DijkstraResult;
 
@@ -18,6 +19,8 @@ import static com.brianstempin.vindiniumclient.bot.advanced.murderbot.AdvancedMu
  */
 public class UnattendedMineDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
 
+    private static final Logger logger = Logger.getLogger("UnattendedMineDecisioner");
+
     private final Decision<AdvancedMurderBot.GameContext, BotMove> noGoodMineDecision;
 
     public UnattendedMineDecisioner(Decision<AdvancedMurderBot.GameContext, BotMove> noGoodMineDecision) {
@@ -28,15 +31,19 @@ public class UnattendedMineDecisioner implements Decision<AdvancedMurderBot.Game
     public BotMove makeDecision(AdvancedMurderBot.GameContext context) {
 
         Map<GameState.Position, DijkstraResult> dijkstraResultMap = context.getDijkstraResultMap();
+        GameState.Hero me = context.getGameState().getMe();
 
         // A good target is the closest unattended mine
         Mine targetMine = null;
 
         for(Mine mine : context.getGameState().getMines().values()) {
-            if(targetMine == null || mine.getOwner() == null)
+            if(targetMine == null && (mine.getOwner() == null
+                    || mine.getOwner().getId() != me.getId()))
                 targetMine = mine;
             else if(dijkstraResultMap.get(targetMine.getPosition()).getDistance()
-                    > dijkstraResultMap.get(mine.getPosition()).getDistance()) {
+                    > dijkstraResultMap.get(mine.getPosition()).getDistance()
+                    && (mine.getOwner() == null
+                    || mine.getOwner().getId() != me.getId())) {
                 targetMine = mine;
             }
         }
@@ -49,9 +56,11 @@ public class UnattendedMineDecisioner implements Decision<AdvancedMurderBot.Game
                 currentResult = dijkstraResultMap.get(currentPosition);
             }
 
+            logger.info("Found a suitable abandoned mine to go after");
             return BotUtils.directionTowards(context.getGameState().getMe().getPos(),
                     currentPosition);
         } else {
+            logger.info("No suitable mine found.  Deferring.");
             return noGoodMineDecision.makeDecision(context);
         }
     }

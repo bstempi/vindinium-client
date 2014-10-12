@@ -4,6 +4,8 @@ import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.bot.BotUtils;
 import com.brianstempin.vindiniumclient.bot.advanced.Pub;
 import com.brianstempin.vindiniumclient.dto.GameState;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
@@ -16,6 +18,9 @@ import java.util.Map;
  * If we're here, we've left Maslov behind...we've become self-aware and have left the hierarchy.
  */
 public class SquatDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
+
+    private static final Logger logger = LogManager.getLogger(SquatDecisioner.class);
+
     @Override
     public BotMove makeDecision(AdvancedMurderBot.GameContext context) {
         GameState.Hero me = context.getGameState().getMe();
@@ -48,15 +53,18 @@ public class SquatDecisioner implements Decision<AdvancedMurderBot.GameContext, 
                 currentResult = dijkstraResultMap.get(currentPosition);
             }
 
+            logger.info("Moving towards a pub to squat.");
             return BotUtils.directionTowards(me.getPos(), currentPosition);
         }
 
         // Ok, we must be there.  Do we need health?
         if(me.getLife() < 50) {
+            logger.info("Getting health while squatting.");
             return BotUtils.directionTowards(me.getPos(), nearestPub.getPosition());
         }
 
         // Nothing to do...squat!
+        logger.info("Squatting at pub.");
         return BotMove.STAY;
     }
 }

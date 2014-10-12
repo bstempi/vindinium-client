@@ -4,9 +4,10 @@ import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.bot.BotUtils;
 import com.brianstempin.vindiniumclient.bot.advanced.Pub;
 import com.brianstempin.vindiniumclient.dto.GameState;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Decides the best way to get healed.
@@ -17,11 +18,11 @@ import java.util.logging.Logger;
  */
 public class HealDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
 
-    private static final Logger logger = Logger.getLogger("HealDecisioner");
+    private static final Logger logger = LogManager.getLogger(HealDecisioner.class);
 
     @Override
     public BotMove makeDecision(AdvancedMurderBot.GameContext context) {
-        logger.info("Running to nearest pub.");
+        logger.info("Need to heal; running to nearest pub.");
 
         Map<GameState.Position, AdvancedMurderBot.DijkstraResult> dijkstraResultMap = context.getDijkstraResultMap();
 

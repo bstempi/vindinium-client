@@ -10,7 +10,10 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * CLI program for launching a bot
@@ -18,6 +21,9 @@ import com.google.gson.GsonBuilder;
 public class Main {
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final JsonFactory JSON_FACTORY = new GsonFactory();
+    private static final Gson gson = new Gson();
+    private static final Logger logger = LogManager.getLogger(Main.class);
+    private static final Logger gameStateLogger = LogManager.getLogger("gameStateLogger");
 
     public static void main(String args[]) {
 
@@ -61,8 +67,8 @@ public class Main {
             initialResponse = initialRequest.execute();
             gameState = initialResponse.parseAs(GameState.class);
 
-            System.out.println("Game view URL:");
-            System.out.println(gameState.getViewUrl());
+            gameStateLogger.info(gson.toJson(gameState));
+            logger.info("Game view URL: " + gameState.getViewUrl());
 
             while(!gameState.getGame().isFinished()) {
                 BotMove direction = bot.move(gameState);
@@ -73,13 +79,12 @@ public class Main {
                 HttpResponse turnResponse = turnRequest.execute();
 
                 gameState = turnResponse.parseAs(GameState.class);
+                gameStateLogger.info(gson.toJson(gameState));
             }
 
-            System.out.println("Done");
-            System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(gameState));
+            logger.info("Game over");
         } catch (Exception e) {
-            System.out.println("Error generating request:");
-            e.printStackTrace();
+            logger.error("Error generating request.", e);
         }
     }
 

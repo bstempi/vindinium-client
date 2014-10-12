@@ -4,9 +4,10 @@ import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.bot.BotUtils;
 import com.brianstempin.vindiniumclient.bot.advanced.Mine;
 import com.brianstempin.vindiniumclient.dto.GameState;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static com.brianstempin.vindiniumclient.bot.advanced.murderbot.AdvancedMurderBot.DijkstraResult;
 
@@ -19,7 +20,7 @@ import static com.brianstempin.vindiniumclient.bot.advanced.murderbot.AdvancedMu
  */
 public class UnattendedMineDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
 
-    private static final Logger logger = Logger.getLogger("UnattendedMineDecisioner");
+    private static final Logger logger = LogManager.getLogger(UnattendedMineDecisioner.class);
 
     private final Decision<AdvancedMurderBot.GameContext, BotMove> noGoodMineDecision;
 

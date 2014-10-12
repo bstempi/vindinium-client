@@ -5,10 +5,11 @@ import com.brianstempin.vindiniumclient.bot.BotUtils;
 import com.brianstempin.vindiniumclient.bot.advanced.Mine;
 import com.brianstempin.vindiniumclient.bot.advanced.Vertex;
 import com.brianstempin.vindiniumclient.dto.GameState;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * Figures out who to shank
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
  */
 public class BotTargetingDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
 
-    private static final Logger logger = Logger.getLogger("BotTargetingDecisioner");
+    private static final Logger logger = LogManager.getLogger(BotTargetingDecisioner.class);
 
     private final Decision<AdvancedMurderBot.GameContext, BotMove> noTargetFoundDecisioner;
 

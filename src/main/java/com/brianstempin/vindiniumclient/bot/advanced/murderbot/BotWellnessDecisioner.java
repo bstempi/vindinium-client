@@ -4,8 +4,8 @@ import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.bot.BotUtils;
 import com.brianstempin.vindiniumclient.bot.advanced.Vertex;
 import com.brianstempin.vindiniumclient.dto.GameState;
-
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Decides if the bot is "well" (healthy) and acts accordingly.
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class BotWellnessDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
 
-    private static final Logger logger = Logger.getLogger("BotWellnessDecisioner");
+    private static final Logger logger = LogManager.getLogger(BotWellnessDecisioner.class);
 
     private final Decision<AdvancedMurderBot.GameContext, BotMove> yesDecisioner;
     private final Decision<AdvancedMurderBot.GameContext, BotMove> noDecisioner;
@@ -36,7 +36,7 @@ public class BotWellnessDecisioner implements Decision<AdvancedMurderBot.GameCon
         // Do we have money for a pub?
         if(me.getGold() < 2) {
             // We're broke...pretend like we're healthy.
-            logger.info("Bot is broke.  Pretending like its healthy.");
+            logger.info("Bot is broke.  Fighting on even if its not healthy.");
             return yesDecisioner.makeDecision(context);
         }
 

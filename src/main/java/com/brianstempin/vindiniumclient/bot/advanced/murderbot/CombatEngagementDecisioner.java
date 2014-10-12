@@ -4,6 +4,8 @@ import com.brianstempin.vindiniumclient.bot.BotMove;
 import com.brianstempin.vindiniumclient.bot.advanced.AdvancedGameState;
 import com.brianstempin.vindiniumclient.bot.advanced.Vertex;
 import com.brianstempin.vindiniumclient.dto.GameState;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
@@ -16,6 +18,9 @@ import java.util.Map;
  * On the Maslow Hierarchy, this falls under safety.
  */
 public class CombatEngagementDecisioner implements Decision<AdvancedMurderBot.GameContext, BotMove> {
+
+    private static final Logger logger = LogManager.getLogger(CombatEngagementDecisioner.class);
+
     private final Decision<AdvancedMurderBot.GameContext, BotMove> yesDecision;
     private final Decision<AdvancedMurderBot.GameContext, BotMove> noDecision;
 
@@ -33,10 +38,12 @@ public class CombatEngagementDecisioner implements Decision<AdvancedMurderBot.Ga
         for(Vertex neighboringVertex : boardGraph.get(me.getPos()).getAdjacentVertices()) {
             // Is there a neighbor in this vertex
             if(context.getGameState().getHeroesByPosition().containsKey(neighboringVertex))
+                logger.info("Bot is currently engaged in combat.");
                 return yesDecision.makeDecision(context);
         }
 
         // Welp, no one was close, so its false.
+        logger.info("Bot is currently not engaged in combat.");
         return noDecision.makeDecision(context);
     }
 }

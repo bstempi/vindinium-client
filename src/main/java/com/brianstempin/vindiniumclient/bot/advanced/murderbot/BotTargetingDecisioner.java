@@ -25,9 +25,11 @@ public class BotTargetingDecisioner implements Decision<AdvancedMurderBot.GameCo
         this.noTargetFoundDecisioner = noTargetFoundDecisioner;
     }
 
+    // TODO Only target bots that have chests
     @Override
     public BotMove makeDecision(AdvancedMurderBot.GameContext context) {
         logger.info("Deciding which bot to target");
+        GameState.Hero me = context.getGameState().getMe();
 
         // Is there a crashed bot with mines we can take advantage of?
         for(Mine currentMine : context.getGameState().getMines().values()) {
@@ -56,11 +58,19 @@ public class BotTargetingDecisioner implements Decision<AdvancedMurderBot.GameCo
             if(currentHero.getId() == context.getGameState().getMe().getId())
                 continue;
 
+            // Are they on their spawn?
+            if(currentHero.getPos().equals(currentHero.getSpawnPos()))
+                continue;
+
+            // Does he have more HP than we do?
+            if(currentHero.getLife() > 20 && currentHero.getLife() > me.getLife())
+                continue;
+
             // Check the adjacent squares to see if a pub exists
             Vertex currentHeroVertext = context.getGameState().getBoardGraph().get(currentHero.getPos());
             for(Vertex currentVertext : currentHeroVertext.getAdjacentVertices()) {
                 if(context.getGameState().getPubs().containsKey(currentVertext.getPosition())) {
-                    break;
+                    continue;
                 }
             }
 

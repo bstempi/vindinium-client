@@ -29,10 +29,13 @@ public class HealDecisioner implements Decision<AdvancedMurderBot.GameContext, B
         Pub nearestPub = null;
         AdvancedMurderBot.DijkstraResult nearestPubDijkstraResult = null;
         for(Pub pub : context.getGameState().getPubs().values()) {
-            if(nearestPub == null || nearestPubDijkstraResult.getDistance() >
-                    dijkstraResultMap.get(pub.getPosition()).getDistance()) {
-                nearestPub = pub;
-                nearestPubDijkstraResult = dijkstraResultMap.get(pub.getPosition());
+            AdvancedMurderBot.DijkstraResult dijkstraToPub = dijkstraResultMap.get(pub.getPosition());
+            if(dijkstraResultMap != null) {
+                if(nearestPub == null || nearestPubDijkstraResult.getDistance() >
+                    dijkstraToPub.getDistance()) {
+                    nearestPub = pub;
+                    nearestPubDijkstraResult = dijkstraResultMap.get(pub.getPosition());
+                }
             }
         }
 

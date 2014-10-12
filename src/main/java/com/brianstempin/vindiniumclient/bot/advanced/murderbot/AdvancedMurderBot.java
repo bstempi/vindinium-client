@@ -13,6 +13,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * An improvement upon com.brianstempin.vindiniumClient.bot.simple.MurderBot
+ *
+ * This class uses a built-in static method to perform the path search via Dijkstra and uses a simple version of
+ * behavior trees to determine its next action.
  */
 public class AdvancedMurderBot implements AdvancedBot {
 
@@ -67,6 +70,12 @@ public class AdvancedMurderBot implements AdvancedBot {
             GameState.Position currentPosition = queue.poll();
             DijkstraResult currentResult = result.get(currentPosition);
             Vertex currentVertext = gameState.getBoardGraph().get(currentPosition);
+
+            // If there's a bot here, then this vertex goes nowhere
+            if(gameState.getHeroesByPosition().containsKey(currentPosition)
+                    && !currentPosition.equals(gameState.getMe().getPos()))
+                continue;
+
             int distance = currentResult.getDistance() + 1;
 
             for(Vertex neighbor : currentVertext.getAdjacentVertices()) {

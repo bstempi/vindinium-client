@@ -30,7 +30,7 @@ public class HealDecisioner implements Decision<AdvancedMurderBot.GameContext, B
         AdvancedMurderBot.DijkstraResult nearestPubDijkstraResult = null;
         for(Pub pub : context.getGameState().getPubs().values()) {
             AdvancedMurderBot.DijkstraResult dijkstraToPub = dijkstraResultMap.get(pub.getPosition());
-            if(dijkstraResultMap != null) {
+            if(dijkstraToPub != null) {
                 if(nearestPub == null || nearestPubDijkstraResult.getDistance() >
                     dijkstraToPub.getDistance()) {
                     nearestPub = pub;

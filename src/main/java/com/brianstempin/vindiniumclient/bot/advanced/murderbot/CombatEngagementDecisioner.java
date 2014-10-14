@@ -39,9 +39,10 @@ public class CombatEngagementDecisioner implements Decision<AdvancedMurderBot.Ga
         for(Vertex neighboringVertex : boardGraph.get(me.getPos()).getAdjacentVertices()) {
             // Is there a neighbor in this vertex
             GameState.Position neighboringPosition = neighboringVertex.getPosition();
-            if(heroesByPosition.containsKey(neighboringPosition))
+            if(heroesByPosition.containsKey(neighboringPosition)) {
                 logger.info("Bot is currently engaged in combat.");
                 return yesDecision.makeDecision(context);
+            }
         }
 
         // Welp, no one was close, so its false.

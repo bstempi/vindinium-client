@@ -15,9 +15,6 @@ import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- * Created by bstempi on 9/28/14.
- */
 public class AdvancedBotRunner implements Runnable {
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final JsonFactory JSON_FACTORY = new GsonFactory();
@@ -28,9 +25,7 @@ public class AdvancedBotRunner implements Runnable {
                     request.setParser(new JsonObjectParser(JSON_FACTORY));
                 }
             });
-    private static final Gson gson = new Gson();
     private static final Logger logger = LogManager.getLogger(AdvancedBotRunner.class);
-    private static final Logger gameStateLogger = LogManager.getLogger("gameStateLogger");
 
     private final ApiKey apiKey;
     private final Class<? extends AdvancedBot> botClass;
@@ -70,7 +65,6 @@ public class AdvancedBotRunner implements Runnable {
             request.setReadTimeout(0); // Wait forever to be assigned to a game
             response = request.execute();
             gameState = response.parseAs(GameState.class);
-            gameStateLogger.info(gson.toJson(gameState));
             logger.info(gameState.getViewUrl());
 
             advancedGameState = new AdvancedGameState(gameState);
@@ -88,7 +82,6 @@ public class AdvancedBotRunner implements Runnable {
 
                 gameState = turnResponse.parseAs(GameState.class);
                 advancedGameState = new AdvancedGameState(advancedGameState, gameState);
-                gameStateLogger.info(gson.toJson(gameState));
             }
 
         } catch (Exception e) {

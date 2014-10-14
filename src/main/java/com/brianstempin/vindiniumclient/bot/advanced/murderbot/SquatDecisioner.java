@@ -30,14 +30,14 @@ public class SquatDecisioner implements Decision<AdvancedMurderBot.GameContext, 
         Pub nearestPub = null;
         AdvancedMurderBot.DijkstraResult nearestPubDijkstraResult = null;
         for(Pub pub : context.getGameState().getPubs().values()) {
-            if(nearestPub == null) {
+            AdvancedMurderBot.DijkstraResult dijkstraResult = dijkstraResultMap.get(pub.getPosition());
+            if(nearestPub == null && dijkstraResult != null) {
                 nearestPub = pub;
                 nearestPubDijkstraResult = dijkstraResultMap.get(pub.getPosition());
                 continue;
             }
-
-            if(dijkstraResultMap.get(nearestPub.getPosition()).getDistance()
-                    > dijkstraResultMap.get(pub.getPosition()).getDistance()) {
+            if(dijkstraResult != null && dijkstraResultMap.get(nearestPub.getPosition()).getDistance()
+                    > dijkstraResult.getDistance()) {
                 nearestPub = pub;
                 nearestPubDijkstraResult = dijkstraResultMap.get(pub.getPosition());
             }

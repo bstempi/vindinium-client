@@ -33,11 +33,13 @@ public class CombatEngagementDecisioner implements Decision<AdvancedMurderBot.Ga
     @Override
     public BotMove makeDecision(AdvancedMurderBot.GameContext context) {
         GameState.Hero me = context.getGameState().getMe();
+        Map<GameState.Position, GameState.Hero> heroesByPosition = context.getGameState().getHeroesByPosition();
         Map<GameState.Position, Vertex> boardGraph = context.getGameState().getBoardGraph();
 
         for(Vertex neighboringVertex : boardGraph.get(me.getPos()).getAdjacentVertices()) {
             // Is there a neighbor in this vertex
-            if(context.getGameState().getHeroesByPosition().containsKey(neighboringVertex))
+            GameState.Position neighboringPosition = neighboringVertex.getPosition();
+            if(heroesByPosition.containsKey(neighboringPosition))
                 logger.info("Bot is currently engaged in combat.");
                 return yesDecision.makeDecision(context);
         }

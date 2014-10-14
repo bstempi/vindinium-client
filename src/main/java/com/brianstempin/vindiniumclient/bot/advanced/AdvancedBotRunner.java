@@ -60,6 +60,7 @@ public class AdvancedBotRunner implements Runnable {
         HttpRequest request;
         HttpResponse response;
         GameState gameState;
+        AdvancedGameState advancedGameState;
 
         try {
             // Initial request
@@ -72,7 +73,7 @@ public class AdvancedBotRunner implements Runnable {
             gameStateLogger.info(gson.toJson(gameState));
             logger.info(gameState.getViewUrl());
 
-            AdvancedGameState advancedGameState = new AdvancedGameState(gameState);
+            advancedGameState = new AdvancedGameState(gameState);
 
             // Game loop
             while (!gameState.getGame().isFinished() && !gameState.getHero().isCrashed()) {

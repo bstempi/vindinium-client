@@ -7,14 +7,12 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class AdvancedGameState {
-    private Map<GameState.Position, Mine> mines;
-    private Map<GameState.Position, Pub> pubs;
-    private Map<GameState.Position, GameState.Hero> heroesByPosition;
-    private Map<Integer, GameState.Hero> heroesById;
-    private Map<GameState.Position, Vertex> boardGraph;
-    private GameState.Hero me;
-
-    public AdvancedGameState() {}
+    private final Map<GameState.Position, Mine> mines;
+    private final Map<GameState.Position, Pub> pubs;
+    private final Map<GameState.Position, GameState.Hero> heroesByPosition;
+    private final Map<Integer, GameState.Hero> heroesById;
+    private final Map<GameState.Position, Vertex> boardGraph;
+    private final GameState.Hero me;
 
     /**
      * Creates an AdvancedGameState from a GameState
@@ -164,47 +162,23 @@ public class AdvancedGameState {
         return mines;
     }
 
-    public void setMines(Map<GameState.Position, Mine> mines) {
-        this.mines = mines;
-    }
-
     public Map<GameState.Position, Pub> getPubs() {
         return pubs;
-    }
-
-    public void setPubs(Map<GameState.Position, Pub> pubs) {
-        this.pubs = pubs;
     }
 
     public Map<GameState.Position, GameState.Hero> getHeroesByPosition() {
         return heroesByPosition;
     }
 
-    public void setHeroesByPosition(Map<GameState.Position, GameState.Hero> heroesByPosition) {
-        this.heroesByPosition = heroesByPosition;
-    }
-
     public Map<Integer, GameState.Hero> getHeroesById() {
         return heroesById;
-    }
-
-    public void setHeroesById(Map<Integer, GameState.Hero> heroesById) {
-        this.heroesById = heroesById;
     }
 
     public Map<GameState.Position, Vertex> getBoardGraph() {
         return boardGraph;
     }
 
-    public void setBoardGraph(Map<GameState.Position, Vertex> boardGraph) {
-        this.boardGraph = boardGraph;
-    }
-
     public GameState.Hero getMe() {
         return me;
-    }
-
-    public void setMe(GameState.Hero me) {
-        this.me = me;
     }
 }

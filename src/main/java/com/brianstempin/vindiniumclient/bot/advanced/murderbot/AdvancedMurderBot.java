@@ -58,7 +58,7 @@ public class AdvancedMurderBot implements AdvancedBot {
         }
     }
 
-    public static Map<GameState.Position, DijkstraResult> dijkstraSearch(AdvancedGameState gameState) {
+    public static synchronized Map<GameState.Position, DijkstraResult> dijkstraSearch(AdvancedGameState gameState) {
         Map<GameState.Position, DijkstraResult> result = new HashMap<>();
 
         DijkstraResult startingResult = new DijkstraResult(0, null);

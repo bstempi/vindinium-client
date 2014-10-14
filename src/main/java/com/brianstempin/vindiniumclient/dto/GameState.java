@@ -14,19 +14,19 @@ import java.util.List;
 public class GameState {
 
     @Key
-    private volatile Game game;
+    private Game game;
 
     @Key
-    private volatile Hero hero;
+    private Hero hero;
 
     @Key
-    private volatile String token;
+    private String token;
 
     @Key
-    private volatile String viewUrl;
+    private String viewUrl;
 
     @Key
-    private volatile String playUrl;
+    private String playUrl;
 
     /**
      * Here for Gson's use
@@ -66,22 +66,22 @@ public class GameState {
     public static class Game {
 
         @Key
-        private volatile String id;
+        private String id;
 
         @Key
-        private volatile int turn;
+        private int turn;
 
         @Key
-        private volatile int maxTurns;
+        private int maxTurns;
 
         @Key
-        private volatile List<Hero> heroes;
+        private List<Hero> heroes;
 
         @Key
-        private volatile Board board;
+        private Board board;
 
         @Key
-        private volatile boolean finished;
+        private boolean finished;
 
         /**
          * Here for Gson's use
@@ -127,34 +127,34 @@ public class GameState {
     public static class Hero {
 
         @Key
-        private volatile int id;
+        private int id;
 
         @Key
-        private volatile String name;
+        private String name;
 
         @Key
-        private volatile String userId;
+        private String userId;
 
         @Key
-        private volatile int elo;
+        private int elo;
 
         @Key
-        private volatile Position pos;
+        private Position pos;
 
         @Key
-        private volatile int life;
+        private int life;
 
         @Key
-        private volatile int gold;
+        private int gold;
 
         @Key
-        private volatile int mineCount;
+        private int mineCount;
 
         @Key
-        private volatile Position spawnPos;
+        private Position spawnPos;
 
         @Key
-        private volatile boolean crashed;
+        private boolean crashed;
 
         /**
          * Here for Gson's use
@@ -221,10 +221,10 @@ public class GameState {
     public static class Board {
 
         @Key
-        private volatile String tiles;
+        private String tiles;
 
         @Key
-        private volatile int size;
+        private int size;
 
         /**
          * Here for Gson's use
@@ -250,10 +250,10 @@ public class GameState {
     public static class Position {
 
         @Key
-        private volatile int x;
+        private int x;
 
         @Key
-        private volatile int y;
+        private int y;
 
         /**
          * Here for Gson's use

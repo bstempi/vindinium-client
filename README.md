@@ -61,7 +61,7 @@ The Main class will reflectively instantiate a `Bot` to play the game.  In order
 This client is broken into a few pieces:  Bots, DTO, and Main.
 
 #### SimpleBot
-com.brainstempin.vindiniumclient.simple.SimpleBot
+com.brainstempin.vindiniumclient.bot.simple.SimpleBot
 
 The gist is that a `GameState` is passed into the bot, it makes its decision, and then returns a `BotMove`.  The `SimpleBotCallable` class will take that move, attach an API key to it, and send it off to the server.  Easy peasy.  The only thing to watch out for is that there must be a publically available default constructor.  This is needed to reflectively instantiate a bot during the game.  If you wish to run a bot that has constructor parameters, then you must modify `Main.java`.
 
@@ -80,14 +80,14 @@ com.brianstempin.vindiniumclient
 Everything starts at the `Main` class.  Its responsible for instantiating the bot, a bot runner, and then running the bot.  Easy peasy.
 
 #### AdvancedBot
-com.brianstempin.vindiniumclient.advanced.AdvancedBot
+com.brianstempin.vindiniumclient.bot.advanced.AdvancedBot
 
 This interface is an improvement on `SimpleBot`.  Instad of taking a `GameState`, it takes an `AdvancedGameState`.  This enhanced game state delivers the game state in a format that is easier for the developer to deal with.
 
 For an example, take a look at `AdvancedMurderBot`.
 
 #### AdvancedGameState
-com.brianstempin.vindiniumclient.advanced.AdvancedGameState
+com.brianstempin.vindiniumclient.bot.advanced.AdvancedGameState
 
 This class extends `GameState`.  In addition to the elements in `GameState`, this new type offers a graph of the board and hash maps for each of the elements on the board to make searching easy.
 

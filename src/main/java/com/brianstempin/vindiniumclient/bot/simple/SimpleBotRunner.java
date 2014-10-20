@@ -1,24 +1,20 @@
-package com.brianstempin.vindiniumclient.bot.advanced;
+package com.brianstempin.vindiniumclient.bot.simple;
 
-import com.brianstempin.vindiniumclient.Main;
 import com.brianstempin.vindiniumclient.bot.BotMove;
-import com.brianstempin.vindiniumclient.bot.advanced.murderbot.AdvancedMurderBot;
 import com.brianstempin.vindiniumclient.dto.ApiKey;
 import com.brianstempin.vindiniumclient.dto.GameState;
 import com.brianstempin.vindiniumclient.dto.Move;
 import com.google.api.client.http.*;
 import com.google.api.client.http.apache.ApacheHttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.Callable;
 
-public class AdvancedBotRunner implements Callable<GameState> {
+public class SimpleBotRunner implements Callable<GameState> {
     private static final HttpTransport HTTP_TRANSPORT = new ApacheHttpTransport();
     private static final JsonFactory JSON_FACTORY = new GsonFactory();
     private static final HttpRequestFactory REQUEST_FACTORY =
@@ -28,13 +24,13 @@ public class AdvancedBotRunner implements Callable<GameState> {
                     request.setParser(new JsonObjectParser(JSON_FACTORY));
                 }
             });
-    private static final Logger logger = LogManager.getLogger(AdvancedBotRunner.class);
+    private static final Logger logger = LogManager.getLogger(SimpleBotRunner.class);
 
     private final ApiKey apiKey;
     private final GenericUrl gameUrl;
-    private final AdvancedBot bot;
+    private final SimpleBot bot;
 
-    public AdvancedBotRunner(ApiKey apiKey, GenericUrl gameUrl, AdvancedBot bot) {
+    public SimpleBotRunner(ApiKey apiKey, GenericUrl gameUrl, SimpleBot bot) {
         this.apiKey = apiKey;
         this.gameUrl = gameUrl;
         this.bot = bot;
@@ -46,7 +42,6 @@ public class AdvancedBotRunner implements Callable<GameState> {
         HttpRequest request;
         HttpResponse response;
         GameState gameState = null;
-        AdvancedGameState advancedGameState;
 
         try {
             // Initial request
@@ -56,14 +51,12 @@ public class AdvancedBotRunner implements Callable<GameState> {
             request.setReadTimeout(0); // Wait forever to be assigned to a game
             response = request.execute();
             gameState = response.parseAs(GameState.class);
-            logger.info("Game URL: ", gameState.getViewUrl());
-
-            advancedGameState = new AdvancedGameState(gameState);
+            logger.info("Game URL: {}", gameState.getViewUrl());
 
             // Game loop
             while (!gameState.getGame().isFinished() && !gameState.getHero().isCrashed()) {
                 logger.info("Taking turn " + gameState.getGame().getTurn());
-                BotMove direction = bot.move(advancedGameState);
+                BotMove direction = bot.move(gameState);
                 Move move = new Move(apiKey.getKey(), direction.toString());
 
 
@@ -72,7 +65,6 @@ public class AdvancedBotRunner implements Callable<GameState> {
                 HttpResponse turnResponse = turnRequest.execute();
 
                 gameState = turnResponse.parseAs(GameState.class);
-                advancedGameState = new AdvancedGameState(advancedGameState, gameState);
             }
 
         } catch (Exception e) {

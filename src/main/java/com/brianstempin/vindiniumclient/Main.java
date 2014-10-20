@@ -1,7 +1,10 @@
 package com.brianstempin.vindiniumclient;
 
+import com.brianstempin.vindiniumclient.bot.advanced.AdvancedBot;
+import com.brianstempin.vindiniumclient.bot.advanced.AdvancedBotRunner;
 import com.brianstempin.vindiniumclient.bot.simple.SimpleBot;
 import com.brianstempin.vindiniumclient.bot.BotMove;
+import com.brianstempin.vindiniumclient.bot.simple.SimpleBotRunner;
 import com.brianstempin.vindiniumclient.dto.ApiKey;
 import com.brianstempin.vindiniumclient.dto.GameState;
 import com.brianstempin.vindiniumclient.dto.Move;
@@ -25,11 +28,12 @@ public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
     private static final Logger gameStateLogger = LogManager.getLogger("gameStateLogger");
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws Exception {
 
         final String key = args[0];
         final String arena = args[1];
-        final String botClass = args[2];
+        final String botType = args[2];
+        final String botClass = args[3];
 
         final GenericUrl gameUrl;
 
@@ -41,51 +45,34 @@ public class Main {
             gameUrl = new VindiniumUrl(arena);
 
 
-        HttpRequestFactory requestFactory =
-                HTTP_TRANSPORT.createRequestFactory(new HttpRequestInitializer() {
-                    @Override
-                    public void initialize(HttpRequest request) {
-                        request.setParser(new JsonObjectParser(JSON_FACTORY));
-                    }
-                });
-
-        final ApiKey apiKey = new ApiKey(key);
-        final HttpContent content = new UrlEncodedContent(apiKey);
-        final HttpRequest initialRequest;
-        final HttpResponse initialResponse;
-
-        GameState gameState;
-        SimpleBot bot;
-
-        try {
-            Class<?> clazz = Class.forName(botClass);
-            Class<? extends SimpleBot> botClazz = clazz.asSubclass(SimpleBot.class);
-            bot = botClazz.newInstance();
-
-            initialRequest = requestFactory.buildPostRequest(gameUrl, content);
-            initialRequest.setReadTimeout(0); // Wait forever
-            initialResponse = initialRequest.execute();
-            gameState = initialResponse.parseAs(GameState.class);
-
-            gameStateLogger.info(gson.toJson(gameState));
-            logger.info("Game view URL: " + gameState.getViewUrl());
-
-            while(!gameState.getGame().isFinished()) {
-                BotMove direction = bot.move(gameState);
-                Move move = new Move(key, direction.toString());
-
-                HttpContent turn = new UrlEncodedContent(move);
-                HttpRequest turnRequest = requestFactory.buildPostRequest(new GenericUrl(gameState.getPlayUrl()), turn);
-                HttpResponse turnResponse = turnRequest.execute();
-
-                gameState = turnResponse.parseAs(GameState.class);
-                gameStateLogger.info(gson.toJson(gameState));
-            }
-
-            logger.info("Game over");
-        } catch (Exception e) {
-            logger.error("Error generating request.", e);
+        switch(botType) {
+            case "simple":
+                runSimpleBot(key, gameUrl, botClass);
+                break;
+            case "advanced":
+                runAdvancedBot(key, gameUrl, botClass);
+                break;
+            default:
+                throw new RuntimeException("The bot type must be simple or advanced and must match the type of the bot.");
         }
+    }
+
+    private static void runAdvancedBot(String key, GenericUrl gameUrl, String botClass) throws Exception {
+        Class<?> clazz = Class.forName(botClass);
+        Class<? extends SimpleBot> botClazz = clazz.asSubclass(SimpleBot.class);
+        SimpleBot bot = botClazz.newInstance();
+        ApiKey apiKey = new ApiKey(key);
+        SimpleBotRunner runner = new SimpleBotRunner(apiKey, gameUrl, bot);
+        runner.call();
+    }
+
+    private static void runSimpleBot(String key, GenericUrl gameUrl, String botClass) throws Exception {
+        Class<?> clazz = Class.forName(botClass);
+        Class<? extends AdvancedBot> botClazz = clazz.asSubclass(AdvancedBot.class);
+        AdvancedBot bot = botClazz.newInstance();
+        ApiKey apiKey = new ApiKey(key);
+        AdvancedBotRunner runner = new AdvancedBotRunner(apiKey, gameUrl, bot);
+        runner.call();
     }
 
     /**

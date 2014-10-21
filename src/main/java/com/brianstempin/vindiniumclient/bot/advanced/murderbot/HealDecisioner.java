@@ -40,6 +40,9 @@ public class HealDecisioner implements Decision<AdvancedMurderBot.GameContext, B
             }
         }
 
+        if(nearestPub == null)
+            return BotMove.STAY;
+        
         GameState.Position nextMove = nearestPub.getPosition();
         while(nearestPubDijkstraResult.getDistance() > 1) {
             nextMove = nearestPubDijkstraResult.getPrevious();

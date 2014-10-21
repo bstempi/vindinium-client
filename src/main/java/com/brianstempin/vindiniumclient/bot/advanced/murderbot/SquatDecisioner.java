@@ -44,7 +44,9 @@ public class SquatDecisioner implements Decision<AdvancedMurderBot.GameContext, 
         }
 
         // Do we need to move to get there?
-        if(nearestPubDijkstraResult.getDistance() > 1) {
+        if(null == nearestPubDijkstraResult) {
+            return BotMove.STAY;
+        } else if(nearestPubDijkstraResult.getDistance() > 1) {
             AdvancedMurderBot.DijkstraResult currentResult = nearestPubDijkstraResult;
             GameState.Position currentPosition = nearestPub.getPosition();
 

@@ -13,6 +13,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.gson.Gson;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,7 +57,7 @@ public class AdvancedBotRunner implements Callable<GameState> {
             request.setReadTimeout(0); // Wait forever to be assigned to a game
             response = request.execute();
             gameState = response.parseAs(GameState.class);
-            logger.info("Game URL: ", gameState.getViewUrl());
+            logger.info("Game URL: {}", gameState.getViewUrl());
 
             advancedGameState = new AdvancedGameState(gameState);
 

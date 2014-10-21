@@ -43,7 +43,7 @@ public class BotTargetingDecisioner implements Decision<AdvancedMurderBot.GameCo
                         context.getDijkstraResultMap().get(target.getPos());
                 GameState.Position nextPosition = target.getPos();
 
-                while(currentDijkstraResult.getDistance() > 1) {
+                while(null != currentDijkstraResult && currentDijkstraResult.getDistance() > 1) {
                     nextPosition = currentDijkstraResult.getPrevious();
                     currentDijkstraResult = context.getDijkstraResultMap().get(nextPosition);
                 }
@@ -65,6 +65,14 @@ public class BotTargetingDecisioner implements Decision<AdvancedMurderBot.GameCo
         GameState.Hero closestTarget = null;
         AdvancedMurderBot.DijkstraResult closestTargetDijkstraResult = null;
         for(GameState.Hero currentHero : heroesWithMines) {
+            AdvancedMurderBot.DijkstraResult currentDijkstraResult = context
+                    .getDijkstraResultMap()
+                    .get(currentHero.getPos());
+
+            // We don't want to target bots that we cannot reach
+            if(currentDijkstraResult == null)
+                continue;
+
             // We don't want to target ourselves
             if(currentHero.getId() == context.getGameState().getMe().getId())
                 continue;
@@ -91,7 +99,7 @@ public class BotTargetingDecisioner implements Decision<AdvancedMurderBot.GameCo
                 closestTargetDijkstraResult = context.getDijkstraResultMap().get(closestTarget.getPos());
                 continue;
             } else if (closestTargetDijkstraResult.getDistance() >
-                    context.getDijkstraResultMap().get(currentHero.getPos()).getDistance()) {
+                    currentDijkstraResult.getDistance()) {
                 closestTarget = currentHero;
                 closestTargetDijkstraResult = context.getDijkstraResultMap().get(closestTarget.getPos());
             }

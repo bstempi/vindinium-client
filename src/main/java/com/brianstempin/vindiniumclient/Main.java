@@ -59,19 +59,18 @@ public class Main {
 
     private static void runAdvancedBot(String key, GenericUrl gameUrl, String botClass) throws Exception {
         Class<?> clazz = Class.forName(botClass);
-        Class<? extends SimpleBot> botClazz = clazz.asSubclass(SimpleBot.class);
-        SimpleBot bot = botClazz.newInstance();
-        ApiKey apiKey = new ApiKey(key);
-        SimpleBotRunner runner = new SimpleBotRunner(apiKey, gameUrl, bot);
-        runner.call();
-    }
-
-    private static void runSimpleBot(String key, GenericUrl gameUrl, String botClass) throws Exception {
-        Class<?> clazz = Class.forName(botClass);
         Class<? extends AdvancedBot> botClazz = clazz.asSubclass(AdvancedBot.class);
         AdvancedBot bot = botClazz.newInstance();
         ApiKey apiKey = new ApiKey(key);
         AdvancedBotRunner runner = new AdvancedBotRunner(apiKey, gameUrl, bot);
+        runner.call();
+    }
+    private static void runSimpleBot(String key, GenericUrl gameUrl, String botClass) throws Exception {
+        Class<?> clazz = Class.forName(botClass);
+        Class<? extends SimpleBot> botClazz = clazz.asSubclass(SimpleBot.class);
+        SimpleBot bot = botClazz.newInstance();
+        ApiKey apiKey = new ApiKey(key);
+        SimpleBotRunner runner = new SimpleBotRunner(apiKey, gameUrl, bot);
         runner.call();
     }
 

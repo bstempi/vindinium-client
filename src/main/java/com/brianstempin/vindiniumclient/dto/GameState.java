@@ -2,6 +2,7 @@ package com.brianstempin.vindiniumclient.dto;
 
 import com.google.api.client.util.Key;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.List;
 
 /**
@@ -11,6 +12,7 @@ import java.util.List;
  * <p/>
  * For further processing, other classes are needed.
  */
+@Immutable
 public class GameState {
 
     @Key
@@ -63,6 +65,7 @@ public class GameState {
         return playUrl;
     }
 
+    @Immutable
     public static class Game {
 
         @Key
@@ -124,6 +127,7 @@ public class GameState {
         }
     }
 
+    @Immutable
     public static class Hero {
 
         @Key
@@ -218,6 +222,7 @@ public class GameState {
         }
     }
 
+    @Immutable
     public static class Board {
 
         @Key
@@ -247,6 +252,7 @@ public class GameState {
         }
     }
 
+    @Immutable
     public static class Position {
 
         @Key

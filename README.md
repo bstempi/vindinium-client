@@ -95,20 +95,15 @@ This class extends `GameState`.  In addition to the elements in `GameState`, thi
 There are a few things that I'd like to do in order to consider this client "complete."  These are in no particular order.
 
 #### Logging and Profiling
-Since the bot only has a second to respond, response times are important.  It'd be nice to be able to see how long a bots responses are taking and where the hot-spots are.
-
-It would also be nice to have a feature to dump game outcomes and stats to files.
+Since the bot only has a second to respond, response times are important.  Log4j is used for logging.  Users are free to add code to dump the game state on each turn.  It might be nice to add more metrics to the code.
 
 #### Multiple Game Play
 If someone wants their bot to go out and destroy everything, then they need something to run the bot in a loop.  It'd be nice if `Main` could accept a param to tell it how many games to play.
 
 If someone *really* wants to give their bot some play time, then it might be nice to be able to run concurrent games.
 
-#### Bot Setup
-Because the bot is started via reflection, there must be a default constructor.  In order to allow people to do some initial set-up before the game, the `Bot` class should have a `setup()` method that gets called before the first server call.
+#### Improving the AdvancedGameState
+While it is absolutely an improvement over the `GameState`, it still leaves something to be desired.  For now, the `AdvancedGameState` is to be considered unstable since it will be undergoing some improvements.
 
-#### Alternate Game State Representation
-The game state representation used by the game isn't very pretty and makes certain tasks, such as indexing the location of mines on the map, a bit of a pain.  It would be nice to provide an alternate game state that included the immutable parts separate from the mutable parts and that made use of `Map`s and `List`s to make traversal easier.
-
-#### Programmatic Running of Games
-`Main` should expose some methods so that games can be started without a CLI.
+#### Testing
+Testing the decisioners is hard.  Its tedious to go through and set up game scenarios to test each possible outcome of each decisioner.  Right now, the testing is not a good example of how a project should be tested.

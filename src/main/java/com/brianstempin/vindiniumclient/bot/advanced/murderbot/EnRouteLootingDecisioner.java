@@ -40,7 +40,7 @@ public class EnRouteLootingDecisioner implements Decision<AdvancedMurderBot.Game
                     || mine.getOwner().getId() != context.getGameState().getMe().getId())) {
 
                 // Is it safe to take?
-                if(BotUtils.getHeroesAround(context.getGameState(), context.getDijkstraResultMap(), 2).size() > 0) {
+                if(BotUtils.getHeroesAround(context.getGameState(), context.getDijkstraResultMap(), 1).size() > 0) {
                     logger.info("Mine found, but another hero is too close.");
                     return noGoodMineDecisioner.makeDecision(context);
                 }

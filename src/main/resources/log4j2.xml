@@ -10,7 +10,7 @@
     </Appenders>
     <Loggers>
         <Root level="info">
-            <AppenderRef ref="ActionFile"/>
+            <AppenderRef ref="Console"/>
         </Root>
     </Loggers>
 </Configuration>

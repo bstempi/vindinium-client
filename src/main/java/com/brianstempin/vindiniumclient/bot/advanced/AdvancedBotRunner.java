@@ -70,6 +70,7 @@ public class AdvancedBotRunner implements Callable<GameState> {
                 try {
                     direction = bot.move(advancedGameState);
                 } catch(Throwable t) {
+                    logger.error("Error while making move", t);
                     direction = BotMove.STAY;
                 }
                 Move move = new Move(apiKey.getKey(), direction.toString());

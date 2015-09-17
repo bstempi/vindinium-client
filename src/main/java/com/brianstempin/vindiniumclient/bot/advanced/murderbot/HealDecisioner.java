@@ -7,6 +7,7 @@ import com.brianstempin.vindiniumclient.dto.GameState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,6 +44,7 @@ public class HealDecisioner implements Decision<AdvancedMurderBot.GameContext, B
         if(nearestPub == null)
             return BotMove.STAY;
 
+        // TODO How do we know that we're not walking too close to a foe?
         GameState.Position nextMove = nearestPub.getPosition();
         while(nearestPubDijkstraResult.getDistance() > 1) {
             nextMove = nearestPubDijkstraResult.getPrevious();

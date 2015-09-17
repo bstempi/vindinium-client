@@ -53,6 +53,13 @@ public class UnattendedMineDecisioner implements Decision<AdvancedMurderBot.Game
         }
 
         if(targetMine != null) {
+
+            // Is it safe to move?
+            if(BotUtils.getHeroesAround(context.getGameState(), context.getDijkstraResultMap(), 2).size() > 0) {
+                logger.info("Mine found, but another hero is too close.");
+                return noGoodMineDecision.makeDecision(context);
+            }
+
             GameState.Position currentPosition = targetMine.getPosition();
             DijkstraResult currentResult = dijkstraResultMap.get(currentPosition);
             while(currentResult.getDistance() > 1) {

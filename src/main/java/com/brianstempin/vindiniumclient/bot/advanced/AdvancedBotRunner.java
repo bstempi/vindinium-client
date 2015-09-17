@@ -64,7 +64,14 @@ public class AdvancedBotRunner implements Callable<GameState> {
             // Game loop
             while (!gameState.getGame().isFinished() && !gameState.getHero().isCrashed()) {
                 logger.info("Taking turn " + gameState.getGame().getTurn());
-                BotMove direction = bot.move(advancedGameState);
+                BotMove direction;
+
+                // If our decisioner crashes, stay put; don't time out.
+                try {
+                    direction = bot.move(advancedGameState);
+                } catch(Throwable t) {
+                    direction = BotMove.STAY;
+                }
                 Move move = new Move(apiKey.getKey(), direction.toString());
 
 

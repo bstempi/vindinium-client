@@ -38,6 +38,12 @@ public class EnRouteLootingDecisioner implements Decision<AdvancedMurderBot.Game
             Mine mine = context.getGameState().getMines().get(currentVertex.getPosition());
             if(mine != null && (mine.getOwner() == null
                     || mine.getOwner().getId() != context.getGameState().getMe().getId())) {
+
+                // Is it safe to take?
+                if(BotUtils.getHeroesAround(context.getGameState(), context.getDijkstraResultMap(), 2).size() > 0) {
+                    logger.info("Mine found, but another hero is too close.");
+                    return noGoodMineDecisioner.makeDecision(context);
+                }
                 logger.info("Taking a mine that we happen to already be walking by.");
                 return BotUtils.directionTowards(myPosition, mine.getPosition());
             }

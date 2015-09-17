@@ -28,7 +28,6 @@ public class BotTargetingDecisioner implements Decision<AdvancedMurderBot.GameCo
         this.noTargetFoundDecisioner = noTargetFoundDecisioner;
     }
 
-    // TODO Only target bots that have chests
     @Override
     public BotMove makeDecision(AdvancedMurderBot.GameContext context) {
         logger.info("Deciding which bot to target");
@@ -75,6 +74,11 @@ public class BotTargetingDecisioner implements Decision<AdvancedMurderBot.GameCo
 
             // We don't want to target ourselves
             if(currentHero.getId() == context.getGameState().getMe().getId())
+                continue;
+
+            // We don't want to target other bots of our type
+            // TODO We probably shouldn't hardcode this name
+            if(currentHero.getName() == "Assassin Bot")
                 continue;
 
             // Are they on their spawn?

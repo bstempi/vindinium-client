@@ -32,7 +32,7 @@ To create an uber JAR:
     
 Command for running from Maven:
 
-    mvn exec:java -Dexec.mainClass='com.brianstempin.vindiniumclient.Main' -Dexec.args='YOURKEY TRAINING simple com.brianstempin.vindiniumclient.bot.RandomBot'
+    mvn exec:java -Dexec.mainClass='com.brianstempin.vindiniumclient.Main' -Dexec.args='YOURKEY TRAINING simple com.brianstempin.vindiniumclient.bot.simple.RandomBot'
 
 #### CLI Usage
 
